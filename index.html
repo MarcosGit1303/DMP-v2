@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pantalla DM</title>
+
+  <!-- Fuente -->
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="title-row">
+    <h1>Notas</h1>
+    <h1 class="right">Música</h1>
+  </header>
+
+  <main class="container">
+    <section class="left-col">
+      <div class="card notes-card">
+        <textarea id="notes" placeholder="Escribe notas preparadas para la sesión..."></textarea>
+        <div class="note-actions">
+          <button id="saveNotes">Guardar</button>
+          <button id="clearNotes">Limpiar</button>
+        </div>
+      </div>
+
+      <div class="card images-card">
+        <div class="card-header">
+          <h2>Imágenes (para pantalla de jugadores)</h2>
+          <div class="images-controls">
+            <!-- para seleccionar carpeta (recursivo en navegadores que lo soportan) -->
+            <input id="imagesInput" type="file" accept="image/*" multiple webkitdirectory />
+            <button id="openViewer">Abrir pantalla jugadores</button>
+            <button id="clearImages" class="secondary">Limpiar</button>
+            <!-- Botón Guardar eliminado -->
+          </div>
+        </div>
+
+        <div id="thumbs" class="thumbs" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="right-col">
+      <div id="playersContainer" class="card music-card">
+        <div class="card-header" style="flex-direction:column;align-items:flex-start;gap:10px;">
+          <div style="width:100%; display:flex; gap:8px; align-items:center;">
+            <h2 style="margin:0;">Reproductor de YouTube</h2>
+          </div>
+
+          <div class="add-row" style="width:100%;">
+            <input id="ytUrl" placeholder="Pega URL de YouTube (https://...)" />
+            <input id="ytName" placeholder="Nombre de la canción (opcional)" style="width:220px" />
+            <button id="addTrack">Añadir</button>
+            <button id="saveTracks">Guardar</button>
+          </div>
+
+          <div class="group-row" style="width:100%; margin-top:6px; display:flex; gap:8px; align-items:center;">
+            <input id="groupName" placeholder="Nombre grupo..." style="width:200px" />
+            <button id="createGroup">Crear grupo</button>
+            <div id="groupsList" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;"></div>
+          </div>
+        </div>
+
+        <div id="tracksList" class="tracks-list" aria-live="polite">
+          <!-- cada pista añadida aparecerá aquí -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="app.js"></script>
+</body>
+</html>
