@@ -114,12 +114,6 @@
   align-items: center;
 }
 
-.track button {
-  /* padding: 6px 10px;
-  border-radius: 8px;
-  cursor: pointer; */
-}
-
 .track input[type="range"] {
   width: 140px;
 }
@@ -137,12 +131,6 @@
   display: flex;
   gap: 8px;
   justify-content: flex-end;
-}
-
-button {
-  /* background: #0b7ea1;
-  color: white;
-  border: none; */
 }
 
 .small {
