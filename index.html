@@ -35,35 +35,42 @@
           <input id="imagesInput" type="file" accept="image/*" multiple webkitdirectory />
           <button id="clearImages" class="secondary">Limpiar</button>
           <button id="openViewer">Abrir pantalla jugadores</button>
-
         </div>
       </div>
     </section>
 
     <section class="right-col">
       <div id="playersContainer" class="card-music music-card">
-        <div class="card-header">
-          <h2>Reproductor de YouTube</h2>
+        <div class="tab-header">
+          <button id="tabGroups" class="tab-button active">🎵 Grupos</button>
+          <button id="tabTracks" class="tab-button">🎶 Música</button>
+        </div>
 
-          <div class="add-row">
-            <input id="ytUrl" placeholder="Pega URL de YouTube (https://...)" />
-            <input id="ytName" placeholder="Nombre de la canción (opcional)" />
-            <button id="addTrack">Añadir</button>
-            <button id="saveTracks">Guardar</button>
-            <button id="clearTracks">Eliminar</button>
-          </div>
-
+        <!-- Sección grupos -->
+        <div id="groupsSection" class="music-section active">
           <div class="group-row">
             <div class="creator">
               <input id="groupName" placeholder="Nombre grupo..." />
               <button id="createGroup">Crear grupo</button>
             </div>
-            <div id="groupsList"></div>
+            <div id="groupsList" class="groups-list"></div>
           </div>
         </div>
 
-        <div id="tracksList" class="tracks-list" aria-live="polite">
-          <!-- cada pista añadida aparecerá aquí -->
+        <!-- Sección música -->
+        <div id="tracksSection" class="music-section">
+          <div class="card-header">
+            <h2>Reproductor de YouTube</h2>
+            <div class="add-row">
+              <input id="ytUrl" placeholder="Pega URL de YouTube (https://...)" />
+              <input id="ytName" placeholder="Nombre de la canción (opcional)" />
+              <button id="addTrack">Añadir</button>
+              <button id="saveTracks">Guardar</button>
+              <button id="clearTracks">Eliminar</button>
+            </div>
+          </div>
+
+          <div id="tracksList" class="tracks-list" aria-live="polite"></div>
         </div>
       </div>
     </section>
@@ -72,5 +79,4 @@
   <script src="https://www.youtube.com/iframe_api"></script>
   <script src="app.js"></script>
 </body>
-
 </html>

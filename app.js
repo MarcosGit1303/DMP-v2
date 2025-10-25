@@ -293,46 +293,72 @@ function fadeYTVolume(player, from, to, duration){
 /* utilidad escape html */
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-/* crear pista: similar a versión anterior, pero mantiene vol(0-100) y grupos */
-function createTrack(videoId, opts = {}){
-  const trackId = 't'+Date.now();
-  const block = document.createElement('div'); block.className='track'; block.id = trackId;
+/* crear pista: ahora con chips de grupos en lugar de select */
+function createTrack(videoId, opts = {}) {
+  const trackId = 't' + Date.now();
+  const block = document.createElement('div');
+  block.className = 'track';
+  block.id = trackId;
 
-  const meta = document.createElement('div'); meta.className='meta';
-  const titleRow = document.createElement('div'); titleRow.style.display='flex'; titleRow.style.gap='8px'; titleRow.style.alignItems='center';
-  const title = document.createElement('div');
-  //  title.textContent = `ID: ${videoId}`;
-  const nameInput = document.createElement('input'); nameInput.value = opts.name || '';
-   nameInput.placeholder = 'Nombre de canción';
-  nameInput.style.padding='6px'; nameInput.style.borderRadius='6px'; nameInput.style.border='1px solid #ddd';
-  nameInput.addEventListener('change', ()=> {
-    const p = players.find(x=>x.id===trackId);
-    if(p) p.data.name = nameInput.value;
-  });
-  titleRow.append(title, nameInput);
+  const meta = document.createElement('div');
+  meta.className = 'meta';
+
+  // Título y nombre
+  const titleRow = document.createElement('div');
+  titleRow.style.display = 'flex';
+  titleRow.style.gap = '8px';
+  titleRow.style.alignItems = 'center';
+  const nameInput = document.createElement('input');
+  nameInput.value = opts.name || '';
+  nameInput.placeholder = 'Nombre de canción';
+  nameInput.style.padding = '6px';
+  nameInput.style.borderRadius = '6px';
+  nameInput.style.border = '1px solid #ddd';
+  titleRow.append(nameInput);
   meta.appendChild(titleRow);
 
-  const playerDiv = document.createElement('div'); playerDiv.id = trackId + '_player';
-  playerDiv.style.width='100%'; playerDiv.style.height='90px';
+  // Contenedor del reproductor
+  const playerDiv = document.createElement('div');
+  playerDiv.id = trackId + '_player';
+  playerDiv.className = 'yt-frame';
   meta.appendChild(playerDiv);
 
-  // group selector (multi)
-  const groupSelect = document.createElement('select'); groupSelect.multiple = true; groupSelect.className='group-select';
-  meta.appendChild(groupSelect);
+  // Contenedor de chips
+  const groupChipsContainer = document.createElement('div');
+  groupChipsContainer.className = 'group-chips';
+  meta.appendChild(groupChipsContainer);
 
-  const controls = document.createElement('div'); controls.className='controls';
-  const row1 = document.createElement('div'); row1.className='row';
-  const playBtn = document.createElement('button'); playBtn.textContent='Play';
-  const pauseBtn = document.createElement('button'); pauseBtn.textContent='Pause';
-  const stopBtn = document.createElement('button'); stopBtn.textContent='Stop';
-  const rmBtn = document.createElement('button'); rmBtn.textContent='Eliminar'; rmBtn.className='secondary';
+  // Controles de pista
+  const controls = document.createElement('div');
+  controls.className = 'controls';
+  const row1 = document.createElement('div');
+  row1.className = 'row';
+  const playBtn = document.createElement('button');
+  playBtn.textContent = 'Play';
+  const pauseBtn = document.createElement('button');
+  pauseBtn.textContent = 'Pause';
+  const stopBtn = document.createElement('button');
+  stopBtn.textContent = 'Stop';
+  const rmBtn = document.createElement('button');
+  rmBtn.textContent = 'Eliminar';
+  rmBtn.className = 'secondary';
   row1.append(playBtn, pauseBtn, stopBtn, rmBtn);
 
-  const row2 = document.createElement('div'); row2.className='row';
-  const volLabel = document.createElement('span'); volLabel.textContent='Vol:';
-  const volRange = document.createElement('input'); volRange.type='range'; volRange.min=0; volRange.max=100; volRange.value = (opts.volume != null ? opts.volume : 80);
-  const loopCheck = document.createElement('input'); loopCheck.type='checkbox'; loopCheck.checked = !!opts.loop;
-  const loopLabel=document.createElement('label'); loopLabel.appendChild(loopCheck); loopLabel.append(' Bucle');
+  const row2 = document.createElement('div');
+  row2.className = 'row';
+  const volLabel = document.createElement('span');
+  volLabel.textContent = 'Vol:';
+  const volRange = document.createElement('input');
+  volRange.type = 'range';
+  volRange.min = 0;
+  volRange.max = 100;
+  volRange.value = opts.volume != null ? opts.volume : 80;
+  const loopCheck = document.createElement('input');
+  loopCheck.type = 'checkbox';
+  loopCheck.checked = !!opts.loop;
+  const loopLabel = document.createElement('label');
+  loopLabel.appendChild(loopCheck);
+  loopLabel.append(' Bucle');
   row2.append(volLabel, volRange, loopLabel);
 
   controls.append(row1, row2);
@@ -352,106 +378,132 @@ function createTrack(videoId, opts = {}){
     }
   };
 
-  // crear el reproductor YT
-  function initPlayer(){
-    try{
+  // --- Inicializar el reproductor ---
+  function initPlayer() {
+    try {
       playerObj.player = new YT.Player(playerDiv.id, {
-        width: '100%',
-        height: '90',
+        width: '200',
+        height: '112',
         videoId: videoId,
-        playerVars: {controls:0, modestbranding:1, rel:0},
+        playerVars: {
+          controls: 0,
+          modestbranding: 1,
+          rel: 0,
+          showinfo: 0,
+          iv_load_policy: 3,
+          disablekb: 1
+        },
         events: {
-          onReady: (e)=>{
-            // aplicar volumen efectivo según grupos (si tiene alguno aplicado) o el volumen base
+          onReady: (e) => {
             const eff = getEffectiveVolumeForPlayer(playerObj);
-            try{ e.target.setVolume(eff); }catch(e){}
+            try {
+              e.target.setVolume(eff);
+            } catch (e) {}
           },
-          onStateChange: (ev)=>{
-            if(ev.data===YT.PlayerState.ENDED && playerObj.data.loop){
+          onStateChange: (ev) => {
+            if (ev.data === YT.PlayerState.ENDED && playerObj.data.loop) {
               ev.target.playVideo();
             }
           }
         }
       });
-    }catch(e){
+    } catch (e) {
       console.warn('Error creando YT player', e);
     }
   }
 
-  if(YTready) initPlayer();
+  if (YTready) initPlayer();
   else {
-    const wait = setInterval(()=>{ if(YTready){ clearInterval(wait); initPlayer(); } },200);
+    const wait = setInterval(() => {
+      if (YTready) {
+        clearInterval(wait);
+        initPlayer();
+      }
+    }, 200);
   }
 
-  // rellenar opciones de grupo
-  function refreshGroupOptions(){
-    const prev = Array.from(groupSelect.selectedOptions).map(o=>o.value);
-    groupSelect.innerHTML = '';
-    groups.forEach(g=>{
-      const opt = document.createElement('option'); opt.value = g.id; opt.textContent = g.name;
-      if(playerObj.data.groups && playerObj.data.groups.includes(g.id)) opt.selected = true;
-      groupSelect.appendChild(opt);
+  // --- Crear chips dinámicos ---
+  function renderGroupChips() {
+    groupChipsContainer.innerHTML = '';
+    const noneChip = document.createElement('div');
+    noneChip.className = 'chip' + (playerObj.data.groups.length === 0 ? ' active' : '');
+    noneChip.textContent = '🟡 Ninguno';
+    noneChip.addEventListener('click', () => {
+      playerObj.data.groups = [];
+      renderGroupChips();
     });
-    // reapply previous selection
-    Array.from(groupSelect.options).forEach(o => { if(prev.includes(o.value)) o.selected = true; });
+    groupChipsContainer.appendChild(noneChip);
+
+    groups.forEach((g) => {
+      const chip = document.createElement('div');
+      chip.className = 'chip' + (playerObj.data.groups.includes(g.id) ? ' active' : '');
+      chip.textContent = g.name;
+      chip.addEventListener('click', () => {
+        const arr = playerObj.data.groups;
+        if (arr.includes(g.id)) {
+          playerObj.data.groups = arr.filter((x) => x !== g.id);
+        } else {
+          playerObj.data.groups.push(g.id);
+        }
+        renderGroupChips();
+      });
+      groupChipsContainer.appendChild(chip);
+    });
   }
-  refreshGroupOptions();
 
-  groupSelect.addEventListener('change', ()=>{
-    playerObj.data.groups = Array.from(groupSelect.selectedOptions).map(o=>o.value);
-    // al cambiar grupos, actualizar volumen efectivo si tiene player
-    if(playerObj.player){
-      const eff = getEffectiveVolumeForPlayer(playerObj);
-      try{ playerObj.player.setVolume(eff); }catch(e){}
-    }
-  });
+  renderGroupChips();
 
-  playBtn.addEventListener('click', ()=> {
-    if(playerObj.player){
-      // fade in to effective
-      try{ playerObj.player.setVolume(0); }catch(e){}
+  // --- Controles ---
+  playBtn.addEventListener('click', () => {
+    if (playerObj.player) {
+      try {
+        playerObj.player.setVolume(0);
+      } catch (e) {}
       playerObj.player.playVideo && playerObj.player.playVideo();
       const eff = getEffectiveVolumeForPlayer(playerObj);
       fadeYTVolume(playerObj.player, 0, eff, FADE_MS);
     }
   });
-  pauseBtn.addEventListener('click', ()=> {
-    if(playerObj.player){
-      fadeYTVolume(playerObj.player, getCurrentYTVolumeSafe(playerObj.player), 0, FADE_MS).then(()=> {
-        try{ playerObj.player.pauseVideo && playerObj.player.pauseVideo(); }catch(e){}
+  pauseBtn.addEventListener('click', () => {
+    if (playerObj.player) {
+      fadeYTVolume(playerObj.player, getCurrentYTVolumeSafe(playerObj.player), 0, FADE_MS).then(() => {
+        try {
+          playerObj.player.pauseVideo && playerObj.player.pauseVideo();
+        } catch (e) {}
       });
     }
   });
-  stopBtn.addEventListener('click', ()=> {
-    if(playerObj.player){
-      fadeYTVolume(playerObj.player, getCurrentYTVolumeSafe(playerObj.player), 0, FADE_MS).then(()=> {
-        try{ playerObj.player.stopVideo && playerObj.player.stopVideo(); }catch(e){}
+  stopBtn.addEventListener('click', () => {
+    if (playerObj.player) {
+      fadeYTVolume(playerObj.player, getCurrentYTVolumeSafe(playerObj.player), 0, FADE_MS).then(() => {
+        try {
+          playerObj.player.stopVideo && playerObj.player.stopVideo();
+        } catch (e) {}
       });
     }
   });
-
-  volRange.addEventListener('input', ()=>{
+  volRange.addEventListener('input', () => {
     playerObj.data.volume = Number(volRange.value);
-    // actualizar volumen efectivo inmediatamente
-    if(playerObj.player){
+    if (playerObj.player) {
       const eff = getEffectiveVolumeForPlayer(playerObj);
-      try{ playerObj.player.setVolume(eff); }catch(e){}
+      try {
+        playerObj.player.setVolume(eff);
+      } catch (e) {}
     }
   });
-
-  loopCheck.addEventListener('change', ()=> playerObj.data.loop = !!loopCheck.checked);
-
-  rmBtn.addEventListener('click', ()=>{
-    if(confirm('Eliminar pista?')){
-      if(playerObj.player) try{ playerObj.player.destroy(); }catch(e){}
+  loopCheck.addEventListener('change', () => (playerObj.data.loop = !!loopCheck.checked));
+  rmBtn.addEventListener('click', () => {
+    if (confirm('Eliminar pista?')) {
+      if (playerObj.player) try { playerObj.player.destroy(); } catch (e) {}
       block.remove();
-      players = players.filter(p=>p.id!==playerObj.id);
+      players = players.filter((p) => p.id !== playerObj.id);
     }
   });
 
   players.push(playerObj);
   return playerObj;
 }
+
 
 /* obtiene volumen efectivo (0-100) multiplicando por grupos si tiene alguno; si tiene varios grupos, tomar la media porcentual */
 function getEffectiveVolumeForPlayer(playerObj){
@@ -582,3 +634,28 @@ document.addEventListener('keydown', (e)=>{
     sendViewer({type:'showImage', index:window._dm_current, data:images[window._dm_current]});
   }
 });
+
+/* app.js - Pantalla DM con pestañas para música */
+
+/* ---- pestañas ---- */
+const tabGroups = document.getElementById("tabGroups");
+const tabTracks = document.getElementById("tabTracks");
+const groupsSection = document.getElementById("groupsSection");
+const tracksSection = document.getElementById("tracksSection");
+
+tabGroups.addEventListener("click", () => {
+  tabGroups.classList.add("active");
+  tabTracks.classList.remove("active");
+  groupsSection.classList.add("active");
+  tracksSection.classList.remove("active");
+});
+
+tabTracks.addEventListener("click", () => {
+  tabTracks.classList.add("active");
+  tabGroups.classList.remove("active");
+  tracksSection.classList.add("active");
+  groupsSection.classList.remove("active");
+});
+
+/* ---- resto del código original ---- */
+// (Pega aquí tu app.js completo sin modificar excepto por este bloque al inicio)

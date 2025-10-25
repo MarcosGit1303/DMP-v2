@@ -1,175 +1,380 @@
-/* === Music Card Layout === */
+/* 🎧 Panel de música – versión simplificada sin fuente externa, botones grandes y select mejorado */
 .music-card {
-  display: flex;
-  flex-direction: column;
   height: 100%;
-  overflow-y: auto;
-}
-
-/* === Header === */
-.card-header {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-/* === Add Group Section === */
-.add-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.add-row input {
-  width: clamp(180px, 14vw, 420px);
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  transition: border-color 0.3s ease;
-}
-
-.add-row input:focus {
-  border-color: #0b7ea1;
-  outline: none;
-}
-
-/* === Group Section === */
-.group-row {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  margin-top: 8px;
-}
-
-.groups-list {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-
-.group-pill {
-  background: linear-gradient(143deg, #4c4c4c, #560000);
-  color: #fff;
-  border-radius: 12px;
-  padding: 8px 12px;
-  display: flex;
-  gap: 6px;
-  font-size: 0.95rem;
-  min-width: 180px;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: column;
-  margin: 1vh;
-}
-
-.group-controls {
-  display: flex;
-  gap: 6px;
-}
-
-/* === Tracks === */
-.tracks-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 8px;
-  padding-bottom: 10px;
-  overflow-y: auto;
-  max-height: 56vh;
-}
-
-.track {
-  background: linear-gradient(143deg, #4c4c4c, #560000);
-  border-radius: 12px;
+    background: linear-gradient(106deg, rgb(103 103 103 / 85%), rgb(45 45 45 / 95%));
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(11, 126, 161, 0.1);
   padding: 12px;
+  overflow: hidden;
+  font-family: system-ui, sans-serif;
+}
+
+/* --- Tabs --- */
+.tab-header {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   gap: 10px;
+  margin-bottom: 12px;
+}
+
+.tab-button {
+  background: linear-gradient(135deg, #19484d, #0a2e38);
+  color: #e8ffff;
+  padding: 12px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  transition: all 0.25s ease;
+}
+
+.tab-button:hover {
+  background: linear-gradient(135deg, #21748c, #15515e);
+  transform: translateY(-1px);
+}
+
+.tab-button.active {
+  background: linear-gradient(135deg, #0b7ea1, #11b39d);
+  box-shadow: 0 0 16px rgba(17, 195, 183, 0.6);
   color: #fff;
 }
 
-.track .meta {
+/* --- Secciones --- */
+.music-section {
+  display: none;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.music-section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Inputs y textos --- */
+input,
+select,
+button {
+  font-family: inherit;
+  font-size: 15px;
+}
+
+input[type="text"],
+input[type="url"],
+textarea,
+select {
+  background: rgba(255, 255, 255, 0.07);
+  color: #e0faff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 8px;
+  transition: all 0.25s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #0b7ea1;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* --- Botones más grandes --- */
+button {
+  background: linear-gradient(135deg, #0b7ea1, #11b39d);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #15c9b7, #0b7ea1);
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px rgba(17, 195, 183, 0.4);
+}
+
+button.secondary {
+  background: linear-gradient(135deg, #520000, #330000);
+}
+
+button.secondary:hover {
+  background: linear-gradient(135deg, #770000, #440000);
+  box-shadow: 0 0 12px rgba(180, 0, 0, 0.4);
+}
+
+/* --- Sección de grupos --- */
+.group-row {
+  width: 100%;
+  margin-top: 10px;
   display: flex;
-  align-items: flex-start;
-  gap: 6px;
-  font-size: 14px;
-  word-break: break-word;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .creator {
   display: flex;
+  gap: 8px;
   align-items: center;
-  gap: 4px;
+  justify-content: flex-start;
 }
 
-/* === Track Controls === */
+.groups-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+  overflow-y: auto;
+  max-height: 56vh;
+  padding-right: 6px;
+}
+
+.group-pill {
+  background: linear-gradient(145deg, rgba(25, 45, 50, 0.9), rgba(20, 35, 40, 0.9));
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid rgba(17, 195, 183, 0.2);
+  transition: all 0.25s ease;
+  box-shadow: inset 0 0 12px rgba(11, 126, 161, 0.15);
+}
+
+.group-pill:hover {
+  background: linear-gradient(145deg, rgba(30, 60, 65, 0.9), rgba(20, 45, 50, 0.9));
+  border-color: rgba(17, 195, 183, 0.5);
+  box-shadow: 0 0 16px rgba(17, 195, 183, 0.3);
+}
+
+.group-pill strong {
+  font-size: 16px;
+  color: #17d5c0;
+}
+
+.group-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.group-controls input[type="range"] {
+  width: 130px;
+  accent-color: #17d5c0;
+}
+
+/* --- Sección de pistas --- */
+.card-header h2 {
+  text-align: center;
+  color: #0b7ea1;
+  font-size: 20px;
+  margin-bottom: 8px;
+  text-shadow: 0 0 6px rgba(11, 126, 161, 0.6);
+}
+
+.add-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.add-row input {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* --- Pistas individuales --- */
+.tracks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+  overflow-y: auto;
+  padding-right: 6px;
+  border-radius: 8px;
+  max-height: 70vh;
+}
+
+.track {
+  background: linear-gradient(145deg, rgba(10, 45, 55, 0.7), rgba(15, 25, 35, 0.85));
+  border: 1px solid rgba(17, 195, 183, 0.15);
+  border-radius: 14px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(17, 195, 183, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.track:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5), 0 0 14px rgba(17, 195, 183, 0.3);
+}
+
+.track .meta {
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* --- NUEVO estilo para el selector de grupos dentro de música --- */
+.group-select {
+  width: 100%;
+  height: auto;
+  min-height: 40px;
+  border-radius: 10px;
+  background: rgba(25, 50, 55, 0.8);
+  border: 1px solid rgba(17, 195, 183, 0.25);
+  color: #c9f8ff;
+  padding: 6px;
+  appearance: none;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.group-select:hover {
+  background: rgba(30, 70, 80, 0.85);
+  border-color: rgba(17, 195, 183, 0.4);
+}
+
+.group-select option {
+  background: #0f1f25;
+  color: #e0faff;
+  padding: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.group-select option:checked {
+  background: linear-gradient(135deg, #0b7ea1, #11b39d);
+  color: #fff;
+  font-weight: bold;
+}
+
+/* --- Controles de pista --- */
 .track .controls {
   display: flex;
   flex-direction: column;
+  gap: 8px;
   align-items: flex-end;
-  gap: 6px;
 }
 
 .track .controls .row {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
 }
 
 .track input[type="range"] {
   width: 140px;
+  accent-color: #17d5c0;
 }
 
-/* === Group Select === */
-.group-select {
-  width: 45%;
-  height: 7vh;
-  padding: 6px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background: #fff;
+/* --- Scrolls --- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #17d5c0, #0b7ea1);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #19f0da, #11b39d);
 }
 
-/* === Notes and Utility === */
-.note-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.small {
-  font-size: 13px;
-  padding: 6px 8px;
-  border-radius: 8px;
-}
-
-/* === Responsive === */
-@media (max-width: 900px) {
-  .container {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-  }
-
-  .add-row input {
-    width: 60%;
-  }
-
-  iframe {
-    width: 100% !important;
-    height: auto !important;
-  }
-}
-
-/* === Iframe === */
+/* --- iframes --- */
 iframe {
   border-radius: 12px;
-  width: 14vw !important;
-  height: 13vh !important;
+  width: 15vw !important;
+  height: 14vh !important;
+  border: none;
+  box-shadow: 0 0 10px rgba(17, 195, 183, 0.3);
+}
+
+/* Chips de grupos */
+.group-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.chip {
+  background: rgba(25, 50, 55, 0.7);
+  color: #c9f8ff;
+  padding: 6px 10px;
+  border-radius: 16px;
+  cursor: pointer;
+  border: 1px solid rgba(17, 195, 183, 0.2);
+  font-size: 14px;
+  transition: all 0.25s ease;
+}
+
+.chip:hover {
+  background: rgba(30, 70, 80, 0.8);
+  border-color: rgba(17, 195, 183, 0.4);
+}
+
+.chip.active {
+  background: linear-gradient(135deg, #0b7ea1, #11b39d);
+  color: #fff;
+  box-shadow: 0 0 8px rgba(17, 195, 183, 0.5);
+}
+
+/* 🔇 Oculta totalmente el reproductor de YouTube */
+.yt-frame iframe {
+  width: 0 !important;
+  height: 0 !important;
+  visibility: hidden;
+  position: absolute;
+  pointer-events: none;
+}
+
+
+/* 🎚️ Aumentar tamaño del control de volumen y el checkbox del bucle */
+.track input[type="range"] {
+  width: 200px;            /* más largo */
+  height: 8px;             /* más grueso */
+  accent-color: #17d5c0;   /* color consistente */
+  cursor: pointer;
+}
+
+.track input[type="range"]::-webkit-slider-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #17d5c0;
+  border: 2px solid #0a2e38;
+}
+
+.track input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #17d5c0;
+  border: 2px solid #0a2e38;
+}
+
+/* Checkbox de bucle más grande */
+.track input[type="checkbox"] {
+  transform: scale(1.6);
+  cursor: pointer;
+  accent-color: #17d5c0;
+  margin-right: 6px;
 }
