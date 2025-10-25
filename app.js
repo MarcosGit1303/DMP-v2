@@ -202,9 +202,9 @@ function renderGroups(){
     // group volume slider
     const vol = document.createElement('input'); vol.type='range'; vol.min=0; vol.max=100; vol.value = g.volume; vol.title='Volumen del grupo';
     vol.style.width='120px';
-    const play = document.createElement('button'); play.textContent='Play All';
-    const pause = document.createElement('button'); pause.textContent='Pause All';
-    const stop = document.createElement('button'); stop.textContent='Stop All';
+    const play = document.createElement('button'); play.textContent='Play';
+    const pause = document.createElement('button'); pause.textContent='Pause';
+    const stop = document.createElement('button'); stop.textContent='Stop';
     const del = document.createElement('button'); del.textContent='X'; del.className='secondary';
     ctrls.append(vol, play, pause, stop, del);
     pill.appendChild(ctrls);
@@ -300,8 +300,10 @@ function createTrack(videoId, opts = {}){
 
   const meta = document.createElement('div'); meta.className='meta';
   const titleRow = document.createElement('div'); titleRow.style.display='flex'; titleRow.style.gap='8px'; titleRow.style.alignItems='center';
-  const title = document.createElement('div'); title.textContent = `ID: ${videoId}`;
-  const nameInput = document.createElement('input'); nameInput.value = opts.name || ''; nameInput.placeholder = 'Nombre de canción';
+  const title = document.createElement('div');
+  //  title.textContent = `ID: ${videoId}`;
+  const nameInput = document.createElement('input'); nameInput.value = opts.name || '';
+   nameInput.placeholder = 'Nombre de canción';
   nameInput.style.padding='6px'; nameInput.style.borderRadius='6px'; nameInput.style.border='1px solid #ddd';
   nameInput.addEventListener('change', ()=> {
     const p = players.find(x=>x.id===trackId);
@@ -511,6 +513,17 @@ saveTracksBtn.addEventListener('click', ()=>{
     console.error(e);
   }
 });
+
+/* Borrar música y grupos guardados */
+const clearTracksBtn = document.getElementById('clearTracks');
+clearTracksBtn.addEventListener('click', ()=> {
+  if(confirm('¿Seguro que quieres borrar todas las pistas y grupos guardados?')) {
+    localStorage.removeItem(TRACKS_KEY);
+    localStorage.removeItem(GROUPS_KEY);
+    alert('Se eliminaron todas las pistas y grupos guardados.');
+  }
+});
+
 
 /* cargar estado al inicio */
 function loadSavedState(){
