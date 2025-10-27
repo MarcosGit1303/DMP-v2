@@ -1,15 +1,12 @@
 <!doctype html>
 <html lang="es">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Pantalla DM</title>
-
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="stylesMusic.css" />
 </head>
-
 <body>
   <header class="title-row">
     <h1>Notas</h1>
@@ -17,15 +14,13 @@
   </header>
 
   <main class="container">
-    <!-- 🔹 Columna izquierda -->
+    <!-- Columna izquierda -->
     <section class="left-col">
-      <!-- Tabs izquierda -->
       <div class="tab-header">
         <button class="tab-button active" data-tab="notesTab">Notas / Imágenes</button>
         <button class="tab-button" data-tab="enemiesTab">Enemigos</button>
       </div>
 
-      <!-- Pestaña 1: Notas e imágenes -->
       <div id="notesTab" class="left-section active">
         <div class="card-notes">
           <textarea id="notes" placeholder="Escribe notas preparadas para la sesión..."></textarea>
@@ -42,26 +37,27 @@
             <input id="imagesInput" type="file" accept="image/*" multiple webkitdirectory />
             <button id="clearImages" class="secondary">Limpiar</button>
             <button id="openViewer">Abrir pantalla jugadores</button>
+            <button id="saveImages" class="small">Guardar (cache)</button>
           </div>
         </div>
       </div>
 
-      <!-- Pestaña 2: Enemigos -->
       <div id="enemiesTab" class="left-section">
         <div class="enemy-manager">
           <div class="add-enemy">
-            <input id="enemyName" placeholder="Nombre del enemigo">
-            <input id="enemyHP" type="number" placeholder="HP total">
-            <input id="enemyAC" type="number" placeholder="AC">
-            <input id="enemySpeed" type="number" placeholder="Velocidad">
+            <input id="enemyName" placeholder="Nombre del enemigo" />
+            <input id="enemyHP" type="number" placeholder="HP total" />
+            <input id="enemyAC" type="number" placeholder="AC" />
+            <input id="enemySpeed" type="number" placeholder="Velocidad" />
             <button id="addEnemy">Añadir enemigo</button>
+            <button id="clearEnemies" class="secondary">Limpiar todos</button>
           </div>
           <div id="enemyList" class="enemy-list"></div>
         </div>
       </div>
     </section>
 
-    <!-- 🔹 Columna derecha -->
+    <!-- Columna derecha -->
     <section class="right-col">
       <div id="playersContainer" class="card-music music-card">
         <div class="tab-header">
@@ -69,7 +65,6 @@
           <button class="tab-button" data-tab="groupsTab">Grupos</button>
         </div>
 
-        <!-- Sección de música -->
         <div id="musicTab" class="music-section active">
           <div class="card-header">
             <h2>Reproductor de YouTube</h2>
@@ -84,12 +79,12 @@
           <div id="tracksList" class="tracks-list" aria-live="polite"></div>
         </div>
 
-        <!-- Sección de grupos -->
         <div id="groupsTab" class="music-section">
           <div class="group-row">
             <div class="creator">
               <input id="groupName" placeholder="Nombre grupo..." />
               <button id="createGroup">Crear grupo</button>
+              <button id="saveGroupsBtn" class="small">Guardar grupos</button>
             </div>
             <div id="groupsList" class="groups-list"></div>
           </div>

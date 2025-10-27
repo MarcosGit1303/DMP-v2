@@ -378,23 +378,3 @@ iframe {
   accent-color: #17d5c0;
   margin-right: 6px;
 }
-
-.music-card {
-  background: linear-gradient(125deg, rgba(10, 25, 30, 0.9), rgba(15, 40, 45, 0.9));
-}
-
-/* Encabezado del panel */
-.card-header {
-  border-bottom: 1px solid rgba(17, 195, 183, 0.2);
-  padding-bottom: 10px;
-  margin-bottom: 12px;
-}
-
-/* Sección grupos / pistas separadas visualmente */
-.music-section {
-  background: rgba(20, 40, 45, 0.6);
-  border-radius: 12px;
-  padding: 10px;
-  border: 1px solid rgba(17, 195, 183, 0.1);
-  box-shadow: inset 0 0 15px rgba(17, 195, 183, 0.05);
-}
