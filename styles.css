@@ -1,11 +1,14 @@
 /* Basic */
 body {
-    background-color: #121212;
+    /* background-color: #121212; */
+    background: linear-gradient(145deg, #0d1b1e, #16383c, #0d1b1e);
+    background-attachment: fixed;
     margin: 0;
     color: #ffffff;
     padding-left: 1vw;
     padding-right: 1vw;
 }
+
 ::-webkit-scrollbar {
     display: none;
 }
@@ -138,4 +141,17 @@ input[type="file"] {
     display: flex;
     margin: 1vh;
     gap: 8px;
+}
+
+.music-card, .track, .group-pill, button {
+  transition: all 0.25s ease-in-out;
+}
+
+.track:hover, .group-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px rgba(17, 195, 183, 0.4);
+}
+
+button:active {
+  transform: scale(0.97);
 }

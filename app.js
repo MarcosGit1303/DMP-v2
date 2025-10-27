@@ -1,7 +1,7 @@
 /* app.js - Pantalla DM (imágenes recursivas + grupos musicales con volumen y fade) */
 
 /* ---------- Config ---------- */
-const FADE_MS = 800; // duración del fade en ms (ajusta si quieres más lento/rápido)
+const FADE_MS = 2000; // duración del fade en ms (ajusta si quieres más lento/rápido)
 
 /* ---------- Selectores DOM ---------- */
 const notesEl = document.getElementById('notes');
@@ -659,3 +659,25 @@ tabTracks.addEventListener("click", () => {
 
 /* ---- resto del código original ---- */
 // (Pega aquí tu app.js completo sin modificar excepto por este bloque al inicio)
+// Enter en el campo de crear grupo
+groupNameInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    createGroupBtn.click();
+  }
+});
+
+// Enter en campos de añadir pista
+ytUrlInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    addTrackBtn.click();
+  }
+});
+
+ytNameInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    addTrackBtn.click();
+  }
+});
