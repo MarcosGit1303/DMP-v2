@@ -9,7 +9,7 @@ const imagesInput = document.getElementById('imagesInput');
 const thumbs = document.getElementById('thumbs');
 const openViewerBtn = document.getElementById('openViewer');
 const clearImagesBtn = document.getElementById('clearImages');
-const saveImagesBtn = document.getElementById('saveImages');
+// const saveImagesBtn = document.getElementById('saveImages');
 
 const ytUrlInput = document.getElementById('ytUrl');
 const ytNameInput = document.getElementById('ytName');
@@ -157,12 +157,12 @@ clearImagesBtn.addEventListener('click', ()=>{
     localStorage.removeItem(IMAGES_KEY);
   }
 });
-saveImagesBtn?.addEventListener('click', ()=> {
-  try{
-    localStorage.setItem(IMAGES_KEY, JSON.stringify(images.map(i=>({name:i.name, dataUrl:i.dataUrl, relativePath:i.relativePath}))));
-    alert('Imágenes guardadas en caché.');
-  }catch(e){ alert('No se pudieron guardar imágenes: ' + e.message); }
-});
+// saveImagesBtn?.addEventListener('click', ()=> {
+//   try{
+//     localStorage.setItem(IMAGES_KEY, JSON.stringify(images.map(i=>({name:i.name, dataUrl:i.dataUrl, relativePath:i.relativePath}))));
+//     alert('Imágenes guardadas en caché.');
+//   }catch(e){ alert('No se pudieron guardar imágenes: ' + e.message); }
+// });
 
 const loadSavedImages = ()=> {
   const raw = localStorage.getItem(IMAGES_KEY); if(!raw) return;
