@@ -6,8 +6,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Pantalla DM</title>
 
-  <!-- Fuente -->
-  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="stylesMusic.css" />
 </head>
@@ -19,46 +17,60 @@
   </header>
 
   <main class="container">
+    <!-- 🔹 Columna izquierda -->
     <section class="left-col">
-      <div class="card-notes">
-        <textarea id="notes" placeholder="Escribe notas preparadas para la sesión..."></textarea>
-        <div class="note-actions">
-          <button id="saveNotes">Guardar</button>
-          <button id="clearNotes">Limpiar</button>
+      <!-- Tabs izquierda -->
+      <div class="tab-header">
+        <button class="tab-button active" data-tab="notesTab">Notas / Imágenes</button>
+        <button class="tab-button" data-tab="enemiesTab">Enemigos</button>
+      </div>
+
+      <!-- Pestaña 1: Notas e imágenes -->
+      <div id="notesTab" class="left-section active">
+        <div class="card-notes">
+          <textarea id="notes" placeholder="Escribe notas preparadas para la sesión..."></textarea>
+          <div class="note-actions">
+            <button id="saveNotes">Guardar</button>
+            <button id="clearNotes">Limpiar</button>
+          </div>
+        </div>
+
+        <div class="card-images">
+          <h2>Imágenes</h2>
+          <div id="thumbs" class="thumbs" aria-live="polite"></div>
+          <div class="images-controls">
+            <input id="imagesInput" type="file" accept="image/*" multiple webkitdirectory />
+            <button id="clearImages" class="secondary">Limpiar</button>
+            <button id="openViewer">Abrir pantalla jugadores</button>
+          </div>
         </div>
       </div>
 
-      <div class="card-images">
-        <h2>Imágenes</h2>
-        <div id="thumbs" class="thumbs" aria-live="polite"></div>
-        <div class="images-controls">
-          <input id="imagesInput" type="file" accept="image/*" multiple webkitdirectory />
-          <button id="clearImages" class="secondary">Limpiar</button>
-          <button id="openViewer">Abrir pantalla jugadores</button>
+      <!-- Pestaña 2: Enemigos -->
+      <div id="enemiesTab" class="left-section">
+        <div class="enemy-manager">
+          <div class="add-enemy">
+            <input id="enemyName" placeholder="Nombre del enemigo">
+            <input id="enemyHP" type="number" placeholder="HP total">
+            <input id="enemyAC" type="number" placeholder="AC">
+            <input id="enemySpeed" type="number" placeholder="Velocidad">
+            <button id="addEnemy">Añadir enemigo</button>
+          </div>
+          <div id="enemyList" class="enemy-list"></div>
         </div>
       </div>
     </section>
 
+    <!-- 🔹 Columna derecha -->
     <section class="right-col">
       <div id="playersContainer" class="card-music music-card">
         <div class="tab-header">
-          <button id="tabGroups" class="tab-button active">🎵 Grupos</button>
-          <button id="tabTracks" class="tab-button">🎶 Música</button>
+          <button class="tab-button active" data-tab="musicTab">Música</button>
+          <button class="tab-button" data-tab="groupsTab">Grupos</button>
         </div>
 
-        <!-- Sección grupos -->
-        <div id="groupsSection" class="music-section active">
-          <div class="group-row">
-            <div class="creator">
-              <input id="groupName" placeholder="Nombre grupo..." />
-              <button id="createGroup">Crear grupo</button>
-            </div>
-            <div id="groupsList" class="groups-list"></div>
-          </div>
-        </div>
-
-        <!-- Sección música -->
-        <div id="tracksSection" class="music-section">
+        <!-- Sección de música -->
+        <div id="musicTab" class="music-section active">
           <div class="card-header">
             <h2>Reproductor de YouTube</h2>
             <div class="add-row">
@@ -69,8 +81,18 @@
               <button id="clearTracks">Eliminar</button>
             </div>
           </div>
-
           <div id="tracksList" class="tracks-list" aria-live="polite"></div>
+        </div>
+
+        <!-- Sección de grupos -->
+        <div id="groupsTab" class="music-section">
+          <div class="group-row">
+            <div class="creator">
+              <input id="groupName" placeholder="Nombre grupo..." />
+              <button id="createGroup">Crear grupo</button>
+            </div>
+            <div id="groupsList" class="groups-list"></div>
+          </div>
         </div>
       </div>
     </section>
