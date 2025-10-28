@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="es">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -7,6 +8,7 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="stylesMusic.css" />
 </head>
+
 <body>
   <header class="title-row">
     <h1>Notas</h1>
@@ -21,6 +23,7 @@
         <button class="tab-button" data-tab="enemiesTab">Enemigos</button>
       </div>
 
+      <!-- Pestaña 1: Notas e imágenes -->
       <div id="notesTab" class="left-section active">
         <div class="card-notes">
           <textarea id="notes" placeholder="Escribe notas preparadas para la sesión..."></textarea>
@@ -32,16 +35,20 @@
 
         <div class="card-images">
           <h2>Imágenes</h2>
-          <div id="thumbs" class="thumbs" aria-live="polite"></div>
+          <div class="images-browser">
+            <div id="foldersList" class="folders-list"></div>
+            <div id="thumbs" class="thumbs" aria-live="polite"></div>
+          </div>
+
           <div class="images-controls">
             <input id="imagesInput" type="file" accept="image/*" multiple webkitdirectory />
             <button id="clearImages" class="secondary">Limpiar</button>
             <button id="openViewer">Abrir pantalla jugadores</button>
-            <!-- <button id="saveImages" class="small">Guardar (cache)</button> -->
           </div>
         </div>
       </div>
 
+      <!-- Pestaña 2: Enemigos -->
       <div id="enemiesTab" class="left-section">
         <div class="enemy-manager">
           <div class="add-enemy">

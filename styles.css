@@ -1,222 +1,143 @@
-/* Basic */
 body {
-    /* background-color: #121212; */
-    background: linear-gradient(145deg, #0d1b1e, #16383c, #0d1b1e);
-    background-attachment: fixed;
-    margin: 0;
-    color: #ffffff;
-    padding-left: 1vw;
-    padding-right: 1vw;
-}
-
-::-webkit-scrollbar {
-    display: none;
-}
-
-h1 {
-    font-size: 44px;
-    margin: 0;
-    color: #ffffff;
-}
-
-h2 {
-    height: 2vh;
-}
-
-button {
-    background-color: rgb(37, 118, 17);
-    color: white;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    padding: 1.2vh 1.4vw;
-}
-
-input[type="file"] {
-    background-color: rgb(37, 118, 17);
-    color: white;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    padding: 1.2vh 1.4vw;
+  margin: 0;
+  background: linear-gradient(145deg, #0d1b1e, #16383c, #0d1b1e);
+  color: white;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: rgba(15, 40, 45, 0.8);
+  border-bottom: 1px solid rgba(17, 195, 183, 0.3);
 }
 
 .container {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5vw;
+  flex: 1;
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  overflow: hidden;
 }
 
-.left-col {
-    display: flex;
-    flex-direction: column;
-    height: 91vh;
-    width: 43vw;
+.left-col, .right-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.right-col {
-    display: flex;
-    flex-direction: column;
-    height: 91vh;
-    width: 53vw;
+.tab-header {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
-.card-notes {
-    display: flex;
-    flex-direction: column;
-    height: 28vh;
-    align-items: center;
-    overflow: hidden;
+.tab-button {
+  flex: 1;
+  padding: 6px;
+  background: rgba(20, 40, 45, 0.6);
+  border: 1px solid rgba(17, 195, 183, 0.2);
+  cursor: pointer;
+  color: white;
 }
 
-#notes {
-    height: 100%;
-    width: 98%;
-    border-radius: 12px;
-    margin: 0.3vw;
-    resize: none;
-    font-size: 1.5vh;
-    background: linear-gradient(106deg, rgb(103 103 103 / 85%), rgb(45 45 45 / 95%));
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(11, 126, 161, 0.1);
-    color: rgb(255, 255, 255);
+.tab-button.active {
+  background: rgba(17, 195, 183, 0.4);
 }
 
-#notes::placeholder {
-    color: rgb(255, 255, 255);
+.left-section, .music-section {
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.card-images {
-    display: flex;
-    flex-direction: column;
-    height: 57vh;
-    overflow: hidden;
-    align-items: center;
+.left-section.active, .music-section.active {
+  display: flex;
 }
 
-#thumbs {
-    height: 82%;
-    width: 99%;
-    background: linear-gradient(106deg, rgb(103 103 103 / 85%), rgb(45 45 45 / 95%));
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(11, 126, 161, 0.1);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 56vh;
-    gap: 0.1vw;
+.card-notes, .card-images, .enemy-manager {
+  background: rgba(10, 25, 30, 0.9);
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid rgba(17, 195, 183, 0.2);
+}
+
+textarea {
+  width: 100%;
+  height: 120px;
+  background: rgba(20, 40, 45, 0.8);
+  border: 1px solid rgba(17, 195, 183, 0.3);
+  color: white;
+  resize: vertical;
+  border-radius: 6px;
+  padding: 6px;
+}
+
+button {
+  background: rgba(17, 195, 183, 0.6);
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.images-browser {
+  display: flex;
+  gap: 10px;
+}
+
+.folders-list {
+  flex: 0 0 150px;
+  overflow-y: auto;
+  background: rgba(10, 25, 30, 0.8);
+  border-radius: 6px;
+  padding: 5px;
+}
+
+.folder {
+  padding-left: 10px;
+  cursor: pointer;
+  margin-bottom: 3px;
+}
+
+.folder.active > .folder-name {
+  background: rgba(17, 195, 183, 0.3);
+  border-radius: 4px;
 }
 
 .thumb {
-    width: 140px;
-    height: 90px;
-    border-radius: 8px;
-    overflow: hidden;
-    flex: 0 0 auto;
-    border: 2px solid rgb(44, 98, 44);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    background: #fafafa;
+  display: inline-block;
+  margin: 5px;
+  border: 1px solid rgba(17, 195, 183, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.images-controls {
-    display: flex;
-    margin: 1vh;
-    gap: 8px;
-}
-
-.music-card,
-.track,
-.group-pill,
-button {
-    transition: all 0.25s ease-in-out;
-}
-
-.track:hover,
-.group-pill:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 10px rgba(17, 195, 183, 0.4);
-}
-
-button:active {
-    transform: scale(0.97);
-}
-
-/* --- NUEVAS PESTAÑAS IZQUIERDA --- */
-.left-section {
-    display: none;
-}
-
-.left-section.active {
-    display: block;
-    animation: fadeIn 0.4s ease forwards;
-}
-
-.enemy-manager {
-    background: linear-gradient(106deg, rgb(103 103 103 / 85%), rgb(45 45 45 / 95%));
-    padding: 12px;
-    border-radius: 12px;
-    box-shadow: inset 0 0 10px rgba(11, 126, 161, 0.1);
-}
-
-.add-enemy {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 10px;
-}
-
-.enemy-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 55vh;
-    overflow-y: auto;
-}
-
-.enemy-card {
-    background: rgba(30, 60, 70, 0.6);
-    padding: 10px;
-    border-radius: 10px;
-    color: #e0faff;
-    border: 1px solid rgba(17, 195, 183, 0.2);
-    box-shadow: inset 0 0 10px rgba(11, 126, 161, 0.1);
+  height: 70px;
+  width: auto;
+  display: block;
 }
 
 .hp-bar {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    height: 12px;
-    margin-top: 4px;
-    overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 4px 0;
+  height: 8px;
 }
 
 .hp-fill {
-    background: linear-gradient(90deg, #17d5c0, #0b7ea1);
-    height: 100%;
-}
-
-.hp-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 4px;
+  background: rgba(17, 195, 183, 0.8);
+  height: 100%;
 }
