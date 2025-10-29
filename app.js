@@ -329,5 +329,234 @@ function adjustHP(id, mod) {
 loadEnemies();
 
 // === Música y grupos ===
-// ... (la sección de música y grupos sigue igual que la versión anterior que te pasé)
-// Para ahorrar espacio no la repito aquí, pero esta es la misma que ya te funcionaba:
+
+// GROUPS (persist)
+const loadGroups = ()=> {
+  const raw = localStorage.getItem(GROUPS_KEY);
+  if(!raw) return;
+  try{ groups = JSON.parse(raw) || []; }catch{ groups=[]; }
+  renderGroups();
+};
+const saveGroups = ()=> localStorage.setItem(GROUPS_KEY, JSON.stringify(groups));
+
+createGroupBtn.addEventListener('click', ()=> {
+  const name = (groupNameInput.value||'').trim();
+  if(!name) return alert('Pon un nombre al grupo.');
+  const id = 'g'+Date.now();
+  groups.push({ id, name, volume:100 });
+  groupNameInput.value='';
+  renderGroups(); saveGroups(); renderTracksList();
+});
+saveGroupsBtn?.addEventListener('click', ()=>{ saveGroups(); alert('Grupos guardados.'); });
+
+function renderGroups(){
+  groupsListEl.innerHTML = '';
+  groups.forEach(g=>{
+    const pill = document.createElement('div'); pill.className='group-pill';
+    pill.innerHTML = `<strong>${escapeHtml(g.name)}</strong>`;
+    const ctrls = document.createElement('div'); ctrls.className='group-controls';
+    const vol = document.createElement('input'); vol.type='range'; vol.min=0; vol.max=100; vol.value=g.volume;
+    const play = document.createElement('button'); play.textContent='Play';
+    const pause = document.createElement('button'); pause.textContent='Pause';
+    const stop = document.createElement('button'); stop.textContent='Stop';
+    const del = document.createElement('button'); del.textContent='Eliminar'; del.className='secondary';
+    ctrls.append(vol, play, pause, stop, del);
+    pill.appendChild(ctrls);
+    groupsListEl.appendChild(pill);
+
+    vol.addEventListener('input', ()=> {
+      g.volume = Number(vol.value); saveGroups(); applyGroupVolumes(g.id);
+    });
+    play.addEventListener('click', ()=> controlGroup(g.id, 'play'));
+    pause.addEventListener('click', ()=> controlGroup(g.id, 'pause'));
+    stop.addEventListener('click', ()=> controlGroup(g.id, 'stop'));
+    del.addEventListener('click', ()=> {
+      if(confirm(`Eliminar grupo "${g.name}" ?`)){
+        groups = groups.filter(x=> x.id !== g.id);
+        players.forEach(p=> p.data.groups = (p.data.groups||[]).filter(id=> id !== g.id));
+        saveGroups(); renderGroups(); renderTracksList();
+      }
+    });
+  });
+}
+
+// MUSIC TRACKS (persist + players)
+const loadTracks = ()=> {
+  const raw = localStorage.getItem(TRACKS_KEY);
+  if(!raw) return;
+  try{ tracks = JSON.parse(raw) || []; }catch{ tracks = []; }
+  renderTracksList(); initAllPlayers();
+};
+const saveTracks = ()=> localStorage.setItem(TRACKS_KEY, JSON.stringify(tracks));
+
+addTrackBtn.addEventListener('click', ()=> {
+  const url = (ytUrlInput.value||'').trim();
+  if(!url) return alert('Pega una URL de YouTube.');
+  const id = extractYouTubeID(url);
+  if(!id) return alert('No se pudo extraer ID de YouTube.');
+  const name = (ytNameInput.value||'').trim() || ('Pista ' + (tracks.length+1));
+  tracks.push({ videoId: id, name, volume: 80, loop:false, groups: [] });
+  ytUrlInput.value=''; ytNameInput.value='';
+  renderTracksList(); saveTracks(); initAllPlayers();
+});
+saveTracksBtn.addEventListener('click', ()=> { saveTracks(); saveGroups(); alert('Pistas y grupos guardados.'); });
+clearTracksBtn.addEventListener('click', ()=> {
+  if(confirm('¿Borrar todas las pistas?')){ tracks=[]; players.forEach(p=> { try{ p.player.destroy(); }catch{} }); players = []; saveTracks(); renderTracksList(); }
+});
+
+function renderTracksList(){
+  tracksList.innerHTML = '';
+  players = players.filter(x=> false); // clear players array (we'll re-init)
+  tracks.forEach((t, index) => {
+    const block = document.createElement('div'); block.className = 'track'; block.id = 'track_' + index;
+    block.innerHTML = `
+      <div class="meta"><div><strong>${escapeHtml(t.name)}</strong></div></div>
+      <div id="player_${index}" class="yt-frame"></div>
+      <div class="group-chips" id="chips_${index}"></div>
+      <div class="controls">
+        <div class="row">
+          <button data-i="${index}" class="play">Play</button>
+          <button data-i="${index}" class="pause">Pause</button>
+          <button data-i="${index}" class="stop secondary">Stop</button>
+          <button data-i="${index}" class="rm secondary">Eliminar</button>
+        </div>
+        <div class="row">
+          <label>Vol <input type="range" min="0" max="100" value="${t.volume}" data-i="${index}" class="vol"></label>
+          <label><input type="checkbox" data-i="${index}" class="loop" ${t.loop ? 'checked' : ''} /> Bucle</label>
+        </div>
+      </div>
+    `;
+    tracksList.appendChild(block);
+    renderChipsForTrack(index);
+  });
+
+  // attach control listeners
+  tracksList.querySelectorAll('.play').forEach(b => b.onclick = async e => {
+    const i = Number(e.target.dataset.i); const p = players[i]?.player; if(!p) return;
+    try { p.setVolume(0); p.playVideo(); await fadeYTVolume(p, 0, tracks[i].volume, FADE_MS); } catch {}
+  });
+  tracksList.querySelectorAll('.pause').forEach(b => b.onclick = async e => {
+    const i = Number(e.target.dataset.i); const p = players[i]?.player; if(!p) return;
+    try { await fadeYTVolume(p, getCurrentYTVolumeSafe(p), 0, FADE_MS); p.pauseVideo(); } catch {}
+  });
+  tracksList.querySelectorAll('.stop').forEach(b => b.onclick = async e => {
+    const i = Number(e.target.dataset.i); const p = players[i]?.player; if(!p) return;
+    try { await fadeYTVolume(p, getCurrentYTVolumeSafe(p), 0, FADE_MS); p.stopVideo(); } catch {}
+  });
+  tracksList.querySelectorAll('.rm').forEach(b => b.onclick = e => {
+    const i = Number(e.target.dataset.i);
+    if(confirm('Eliminar pista?')){ if(players[i]?.player) try{ players[i].player.destroy(); }catch{} tracks.splice(i,1); saveTracks(); renderTracksList(); initAllPlayers(); }
+  });
+
+  tracksList.querySelectorAll('.vol').forEach(r => r.addEventListener('input', e => {
+    const i = Number(e.target.dataset.i); const v = Number(e.target.value); tracks[i].volume = v;
+    const p = players[i]?.player; if(p) try{ p.setVolume(v); }catch{}
+    saveTracks();
+  }));
+  tracksList.querySelectorAll('.loop').forEach(chk => chk.addEventListener('change', e => {
+    const i = Number(e.target.dataset.i); tracks[i].loop = e.target.checked; saveTracks();
+  }));
+}
+
+function renderChipsForTrack(index){
+  const container = document.getElementById('chips_' + index);
+  if(!container) return;
+  container.innerHTML = '';
+  const noneChip = document.createElement('div'); noneChip.className='chip ' + (tracks[index].groups.length === 0 ? 'active' : '');
+  noneChip.textContent = '🟡 Ninguno';
+  noneChip.addEventListener('click', ()=>{ tracks[index].groups = []; saveTracks(); renderChipsForTrack(index); });
+  container.appendChild(noneChip);
+
+  groups.forEach(g=>{
+    const chip = document.createElement('div'); chip.className = 'chip' + (tracks[index].groups && tracks[index].groups.includes(g.id) ? ' active' : '');
+    chip.textContent = g.name;
+    chip.addEventListener('click', ()=>{
+      const arr = tracks[index].groups || [];
+      if(arr.includes(g.id)) tracks[index].groups = arr.filter(x=> x !== g.id);
+      else tracks[index].groups = [...arr, g.id];
+      saveTracks(); renderChipsForTrack(index);
+    });
+    container.appendChild(chip);
+  });
+}
+
+// INIT YouTube players for all tracks
+function initAllPlayers(){
+  // destroy existing players in DOM (if any)
+  // recreate players array aligned with tracks indexes
+  players = tracks.map((t, i) => ({
+    id: 'player_' + i,
+    videoId: t.videoId,
+    player: null,
+    data: { name: t.name, volume: t.volume, loop: !!t.loop, groups: Array.isArray(t.groups) ? t.groups.slice() : [] }
+  }));
+
+  // init players when API ready
+  players.forEach((p, i) => {
+    const containerId = 'player_' + i;
+    try{
+      if(!YTready) return;
+      p.player = new YT.Player(containerId, {
+        height: '0', width: '0', videoId: p.videoId,
+        playerVars: { controls: 0, modestbranding: 1, rel: 0, disablekb: 1 },
+        events: {
+          onReady: ev => { try{ ev.target.setVolume(p.data.volume); }catch{} },
+          onStateChange: ev => { if(ev.data === YT.PlayerState.ENDED && p.data.loop) ev.target.playVideo(); }
+        }
+      });
+    }catch(e){ console.warn('YT init error', e); }
+  });
+}
+
+// Apply group volume multipliers to players in that group
+function applyGroupVolumes(groupId){
+  players.forEach((p, idx) => {
+    if(!p.player) return;
+    const belongs = (tracks[idx].groups || []).includes(groupId);
+    if(!belongs) return;
+    const group = groups.find(g => g.id === groupId);
+    const eff = Math.round((tracks[idx].volume * (group?.volume || 100)) / 100);
+    try{ p.player.setVolume(eff); }catch{}
+  });
+}
+
+// Group-level controls with fade
+function controlGroup(groupId, action){
+  players.forEach((p, idx) => {
+    if(!(tracks[idx].groups || []).includes(groupId)) return;
+    if(!p.player) return;
+    const targetVol = Math.round((tracks[idx].volume * (groups.find(g=>g.id===groupId)?.volume||100)) / 100);
+    if(action === 'play'){
+      try{ p.player.setVolume(0); }catch{}
+      p.player.playVideo && p.player.playVideo();
+      fadeYTVolume(p.player, 0, targetVol, FADE_MS);
+    } else if(action === 'pause'){
+      fadeYTVolume(p.player, getCurrentYTVolumeSafe(p.player), 0, FADE_MS).then(()=>{ try{ p.player.pauseVideo && p.player.pauseVideo(); }catch{} });
+    } else if(action === 'stop'){
+      fadeYTVolume(p.player, getCurrentYTVolumeSafe(p.player), 0, FADE_MS).then(()=>{ try{ p.player.stopVideo && p.player.stopVideo(); }catch{} });
+    }
+  });
+}
+
+// Helpers for initial load
+function initAll(){
+  loadGroups(); loadTracks(); loadEnemies(); loadSavedImages();
+  renderGroups(); renderTracksList(); initAllPlayers();
+}
+initAll();
+
+// Enter shortcuts
+[groupNameInput, ytUrlInput, ytNameInput].forEach(el=>{
+  if(!el) return;
+  el.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){ e.preventDefault(); if(el === groupNameInput) createGroupBtn.click(); else addTrackBtn.click(); }
+  });
+});
+
+// viewerReady message (if secondary viewer asks)
+window.addEventListener('message', ev=>{
+  const d = ev.data;
+  if(d && d.type === 'viewerReady'){
+    if(typeof window._dm_current === 'number' && images[window._dm_current]) sendViewer({ type:'showImage', index: window._dm_current, data: images[window._dm_current] });
+  }
+});
