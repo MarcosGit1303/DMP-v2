@@ -560,3 +560,6 @@ window.addEventListener('message', ev=>{
     if(typeof window._dm_current === 'number' && images[window._dm_current]) sendViewer({ type:'showImage', index: window._dm_current, data: images[window._dm_current] });
   }
 });
+
+
+a
