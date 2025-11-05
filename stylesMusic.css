@@ -397,3 +397,71 @@ iframe {
   accent-color: #17d5c0;
   margin-right: 6px;
 }
+
+/* ===== Unificar estilo de sliders de pistas y grupos ===== */
+.track input[type="range"],
+.group-controls input[type="range"],
+.vol {
+  -webkit-appearance: none; /* quitar apariencia por defecto WebKit */
+  appearance: none;
+  width: 140px;
+  height: 8px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #b3b3b3 0%, #560000 100%);
+  outline: none;
+  cursor: pointer;
+  margin: 0 8px;
+}
+
+/* Pista de progreso (WebKit) */
+.track input[type="range"]::-webkit-slider-runnable-track,
+.group-controls input[type="range"]::-webkit-slider-runnable-track,
+.vol::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #b3b3b3 0%, #560000 100%);
+}
+
+/* Pulgar/knob (WebKit) */
+.track input[type="range"]::-webkit-slider-thumb,
+.group-controls input[type="range"]::-webkit-slider-thumb,
+.vol::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0b7ea1;
+  border: 3px solid rgba(255,255,255,0.85);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  margin-top: -6px; /* centrar el thumb verticalmente respecto a la pista */
+}
+
+/* Firefox */
+.track input[type="range"]::-moz-range-track,
+.group-controls input[type="range"]::-moz-range-track,
+.vol::-moz-range-track {
+  height: 8px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #b3b3b3 0%, #560000 100%);
+}
+
+.track input[type="range"]::-moz-range-thumb,
+.group-controls input[type="range"]::-moz-range-thumb,
+.vol::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0b7ea1;
+  border: 3px solid rgba(255,255,255,0.85);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+/* Asegura que esta regla tenga prioridad si hay otras reglas muy específicas */
+.track input[type="range"],
+.group-controls input[type="range"],
+.vol { 
+  /* si necesitas forzar, descomenta la línea siguiente: */
+  /* width: 140px !important; */
+}
+
