@@ -141,3 +141,24 @@ button.secondary {
   background: rgba(17, 195, 183, 0.8);
   height: 100%;
 }
+
+/* 🎨 Botón de subir imágenes estilizado */
+.file-label {
+  display: inline-block;
+  background: linear-gradient(135deg, #0b7ea1, #11b39d);
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+  text-align: center;
+}
+
+.file-label:hover {
+  background: linear-gradient(135deg, #15c9b7, #0b7ea1);
+  box-shadow: 0 0 12px rgba(17, 195, 183, 0.4);
+  transform: translateY(-1px);
+}
