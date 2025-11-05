@@ -345,22 +345,41 @@ iframe {
   position: absolute;
   pointer-events: none;
 }
-
-
-/* 🎚️ Aumentar tamaño del control de volumen y el checkbox del bucle */
+/* 🎚️ Control de volumen mejorado y compatible con Chrome, Opera y Firefox */
 .track input[type="range"] {
-  width: 200px;            /* más largo */
-  height: 8px;             /* más grueso */
-  accent-color: #17d5c0;   /* color consistente */
+  -webkit-appearance: none;
+  appearance: none;
+  width: 200px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;  outline: none;
   cursor: pointer;
 }
 
+/* Barra (track) para navegadores basados en WebKit / Blink (Chrome, Opera, Edge) */
+.track input[type="range"]::-webkit-slider-runnable-track {
+  height: 8px;
+  background: linear-gradient(90deg, #0b7ea1, #11b39d);
+  border-radius: 4px;
+}
+
+/* Puntero (thumb) en Chrome / Opera */
 .track input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
   width: 18px;
   height: 18px;
   border-radius: 50%;
   background: #17d5c0;
   border: 2px solid #0a2e38;
+  margin-top: -5px; /* centra el thumb */
+}
+
+/* Barra y thumb para Firefox */
+.track input[type="range"]::-moz-range-track {
+  height: 8px;
+  background: linear-gradient(90deg, #0b7ea1, #11b39d);
+  border-radius: 4px;
 }
 
 .track input[type="range"]::-moz-range-thumb {

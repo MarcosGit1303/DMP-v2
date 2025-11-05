@@ -41,7 +41,9 @@
           </div>
 
           <div class="images-controls">
-            <input id="imagesInput" type="file" accept="image/*" multiple webkitdirectory />
+            <label for="imagesInput" class="file-label">📸 Añadir imágenes</label>
+            <input id="imagesInput" type="file" accept="image/*" multiple webkitdirectory hidden />
+
             <button id="clearImages" class="secondary">Limpiar</button>
             <button id="openViewer">Abrir pantalla jugadores</button>
           </div>
@@ -103,4 +105,5 @@
   <script src="https://www.youtube.com/iframe_api"></script>
   <script src="app.js"></script>
 </body>
+
 </html>
