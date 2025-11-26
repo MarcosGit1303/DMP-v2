@@ -19,20 +19,12 @@
     <!-- Columna izquierda -->
     <section class="left-col">
       <div class="tab-header">
-        <button class="tab-button active" data-tab="notesTab">Notas / Imágenes</button>
+        <button class="tab-button active" data-tab="notesTab">Imágenes</button>
         <button class="tab-button" data-tab="enemiesTab">Enemigos</button>
       </div>
 
       <!-- Pestaña 1: Notas e imágenes -->
       <div id="notesTab" class="left-section active">
-        <div class="card-notes">
-          <textarea id="notes" placeholder="Escribe notas preparadas para la sesión..."></textarea>
-          <div class="note-actions">
-            <button id="saveNotes">Guardar</button>
-            <button id="clearNotes">Limpiar</button>
-          </div>
-        </div>
-
         <div class="card-images">
           <h2>Imágenes</h2>
           <div class="images-browser">
@@ -55,13 +47,13 @@
         <div class="enemy-manager">
           <div class="add-enemy">
             <input id="enemyName" placeholder="Nombre del enemigo" />
-            <input id="enemyHP" type="number" placeholder="HP total" />
-            <input id="enemyAC" type="number" placeholder="AC" />
-            <input id="enemySpeed" type="number" placeholder="Velocidad" />
+            <input id="enemyHP" type="number" min="1" placeholder="HP total" />
+            <input id="enemyAC" type="number" min="0" placeholder="AC" />
+            <input id="enemySpeed" type="number" min="0" placeholder="Velocidad" />
             <button id="addEnemy">Añadir enemigo</button>
             <button id="clearEnemies" class="secondary">Limpiar todos</button>
           </div>
-          <div id="enemyList" class="enemy-list"></div>
+          <div id="enemyList" class="enemy-list" aria-live="polite"></div>
         </div>
       </div>
     </section>
@@ -102,7 +94,11 @@
     </section>
   </main>
 
+  <!-- Nuevo orden de scripts: music.js, YouTube API, images.js, enemies.js, app.js -->
+  <script src="music.js"></script>
   <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="images.js"></script>
+  <script src="enemies.js"></script>
   <script src="app.js"></script>
 </body>
 
