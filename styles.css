@@ -288,6 +288,42 @@ body {
   cursor: pointer
 }
 
+/* Estilos específicos para la sección de enemigos */
+.enemy-manager .add-enemy {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.enemy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 50vh;
+  overflow: auto;
+  margin-top: 8px;
+}
+
+.enemy-card {
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.enemy-card .small {
+  padding: 6px 8px;
+}
+
+.enemy-card input[type="number"] {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: var(--text);
+  padding: 6px;
+  border-radius: 6px;
+}
+
 /* Responsive small tweaks */
 @media(min-width:1100px) {
   .left-col {
