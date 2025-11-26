@@ -46,6 +46,12 @@
 
             <button id="clearImages" class="secondary">Limpiar</button>
             <button id="openViewer">Abrir pantalla jugadores</button>
+
+            <!-- Campo de búsqueda para filtrar miniaturas -->
+            <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+              <input id="imageSearch" placeholder="Buscar imágenes (nombre o ruta)..." style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text)" />
+              <button id="clearSearch" class="small secondary">Borrar</button>
+            </div>
           </div>
         </div>
       </div>
@@ -102,7 +108,10 @@
     </section>
   </main>
 
+  <!-- Nuevo orden de scripts: music.js, YouTube API, images.js, app.js -->
+  <script src="music.js"></script>
   <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="images.js"></script>
   <script src="app.js"></script>
 </body>
 
