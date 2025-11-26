@@ -19,20 +19,12 @@
     <!-- Columna izquierda -->
     <section class="left-col">
       <div class="tab-header">
-        <button class="tab-button active" data-tab="notesTab">Notas / Imágenes</button>
+        <button class="tab-button active" data-tab="notesTab">Imágenes</button>
         <button class="tab-button" data-tab="enemiesTab">Enemigos</button>
       </div>
 
       <!-- Pestaña 1: Notas e imágenes -->
       <div id="notesTab" class="left-section active">
-        <div class="card-notes">
-          <textarea id="notes" placeholder="Escribe notas preparadas para la sesión..."></textarea>
-          <div class="note-actions">
-            <button id="saveNotes">Guardar</button>
-            <button id="clearNotes">Limpiar</button>
-          </div>
-        </div>
-
         <div class="card-images">
           <h2>Imágenes</h2>
           <div class="images-browser">
@@ -46,12 +38,6 @@
 
             <button id="clearImages" class="secondary">Limpiar</button>
             <button id="openViewer">Abrir pantalla jugadores</button>
-
-            <!-- Campo de búsqueda para filtrar miniaturas -->
-            <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
-              <input id="imageSearch" placeholder="Buscar imágenes (nombre o ruta)..." style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text)" />
-              <button id="clearSearch" class="small secondary">Borrar</button>
-            </div>
           </div>
         </div>
       </div>

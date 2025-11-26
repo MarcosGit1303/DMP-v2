@@ -13,7 +13,8 @@
   --text: #e8f6ff;
   --soft: rgba(30, 70, 90, 0.9);
   --radius: 10px;
-  --top-offset: 140px; /* espacio ocupado por header/u otros elementos encima */
+  --top-offset: 140px;
+  /* espacio ocupado por header/u otros elementos encima */
 }
 
 /* Layout base */
@@ -110,10 +111,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-height: 200px;
-  max-height: calc(100vh - var(--top-offset)); /* no exceder la altura visible del viewport */
+  max-height: calc(75vh);
+  /* no exceder la altura visible del viewport */
   overflow: hidden;
   box-sizing: border-box;
+  height: 100%;
 }
 
 /* images-browser ocupa el espacio restante dentro de card-images */
@@ -122,7 +124,8 @@ body {
   gap: 12px;
   align-items: flex-start;
   flex: 1 1 auto;
-  min-height: 0; /* importante para permitir que los hijos con overflow hagan scroll */
+  min-height: 0;
+  /* importante para permitir que los hijos con overflow hagan scroll */
 }
 
 /* FOLDER LIST: ocupar toda la altura interior y scrollear si hace falta */
@@ -194,38 +197,43 @@ body {
 }
 
 /* THUMBS: usar layout flex pequeño y ordenado */
-.thumbs{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  align-items:flex-start;
-  overflow:auto;
-  padding:8px;
-  height:100%;
-  min-height:0;
-  box-sizing:border-box;
+.thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+  overflow: auto;
+  padding: 8px;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
 }
 
-.thumb{
-  flex:0 0 72px; /* ancho fijo pequeño */
-  width:72px;
-  height:72px;
-  border-radius:6px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,0.03);
-  background:rgba(0,0,0,0.06);
-  display:flex;align-items:center;justify-content:center;
+.thumb {
+  flex: 0 0 72px;
+  /* ancho fijo pequeño */
+  width: 72px;
+  height: 72px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.thumb img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-  transition:transform .18s ease;
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .18s ease;
 }
 
-.thumb:hover img{transform:scale(1.08)}
+.thumb:hover img {
+  transform: scale(1.08)
+}
 
 /* Caption overlay en la miniatura */
 .thumb .caption {
