@@ -1,97 +1,93 @@
 /* Variables y paleta principal */
 :root {
-  --bg-900: #041421;
-  /* fondo más oscuro */
-  --bg-800: #072032;
-  --panel: #0b2a3d;
-  --panel-variant: #0f3b53;
-  --accent: #1e90ff;
-  /* acento azul */
-  --accent-600: #1aa0ff;
-  --muted: rgba(255, 255, 255, 0.08);
-  --glass: rgba(10, 20, 30, 0.6);
-  --text: #e8f6ff;
-  --soft: rgba(30, 70, 90, 0.9);
-  --radius: 10px;
-  --top-offset: 140px;
-  /* espacio ocupado por header/u otros elementos encima */
+    --bg-900: #041421;
+    --bg-800: #072032;
+    --panel: #0b2a3d;
+    --panel-variant: #0f3b53;
+    --accent: #1e90ff;
+    --accent-600: #1aa0ff;
+    --muted: rgba(255, 255, 255, 0.08);
+    --glass: rgba(10, 20, 30, 0.6);
+    --text: #e8f6ff;
+    --soft: rgba(30, 70, 90, 0.9);
+    --radius: 10px;
+    --top-offset: 140px;
 }
 
-/* Layout base */
 body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  background: linear-gradient(160deg, var(--bg-900), var(--bg-800));
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
+    margin: 0;
+    min-height: 100vh;
+    font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    background: linear-gradient(160deg, var(--bg-900), var(--bg-800));
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
 }
 
 .title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0px 18px;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.02));
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 18px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.02));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .container {
-  display: flex;
-  gap: 12px;
-  padding: 12px;
-  flex: 1;
-  box-sizing: border-box;
-  overflow: hidden;
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    flex: 1;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .left-col,
 .right-col {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
 }
 
 /* Tabs */
 .tab-header {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px
 }
 
 .tab-button {
-  padding: 8px 12px;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  color: var(--text);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all .18s ease;
+    padding: 8px 12px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    color: var(--text);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .18s ease;
 }
 
 .tab-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35)
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35)
 }
 
 .tab-button.active {
-  background: linear-gradient(180deg, var(--panel), var(--panel-variant));
-  border-color: rgba(30, 144, 255, 0.25);
-  box-shadow: 0 6px 18px rgba(30, 144, 255, 0.06)
+    background: linear-gradient(180deg, var(--panel), var(--panel-variant));
+    border-color: rgba(30, 144, 255, 0.25);
+    box-shadow: 0 6px 18px rgba(30, 144, 255, 0.06)
 }
 
 .left-section,
 .music-section {
-  display: none;
-  flex-direction: column;
-  gap: 10px
+    display: none;
+    flex-direction: column;
+    gap: 10px
 }
 
 .left-section.active,
 .music-section.active {
-  display: flex
+    display: flex
 }
 
 /* Cards */
@@ -99,358 +95,400 @@ body {
 .card-images,
 .enemy-manager,
 .music-card {
-  background: linear-gradient(180deg, var(--panel), rgba(8, 30, 40, 0.9));
-  border-radius: var(--radius);
-  padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45)
+    background: linear-gradient(180deg, var(--panel), rgba(8, 30, 40, 0.9));
+    border-radius: var(--radius);
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45)
 }
 
 /* Make card-images a vertical panel so the thumbs area can scroll */
 .card-images {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: calc(75vh);
-  /* no exceder la altura visible del viewport */
-  overflow: hidden;
-  box-sizing: border-box;
-  height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: calc(75vh);
+    /* no exceder la altura visible del viewport */
+    overflow: hidden;
+    box-sizing: border-box;
+    height: 100%;
 }
 
 /* images-browser ocupa el espacio restante dentro de card-images */
 .images-browser {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  flex: 1 1 auto;
-  min-height: 0;
-  /* importante para permitir que los hijos con overflow hagan scroll */
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    flex: 1 1 auto;
+    min-height: 0;
+    /* importante para permitir que los hijos con overflow hagan scroll */
 }
 
 /* FOLDER LIST: ocupar toda la altura interior y scrollear si hace falta */
 .folders-list {
-  flex: 0 0 220px;
-  overflow: auto;
-  background: transparent;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.02);
-  height: 100%;
-  box-sizing: border-box;
+    flex: 0 0 220px;
+    overflow: auto;
+    background: transparent;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.02);
+    height: 100%;
+    box-sizing: border-box;
 }
 
 /* Icono y estilo del nombre de carpeta */
-.folder>.folder-name {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-  border-radius: 6px;
-  font-weight: 600
+.folder > .folder-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 6px;
+    font-weight: 600
 }
 
-.folder>.folder-name::before {
-  content: '📁';
-  display: inline-block;
-  margin-right: 4px
+.folder > .folder-name::before {
+    content: '📁';
+    display: inline-block;
+    margin-right: 4px
 }
 
 /* caret para indicar colapsable */
-.folder>.folder-name::after {
-  content: '▸';
-  margin-left: auto;
-  color: var(--accent);
-  font-size: 12px;
-  transform: rotate(0);
-  transition: transform .18s ease
+.folder > .folder-name::after {
+    content: '▸';
+    margin-left: auto;
+    color: var(--accent);
+    font-size: 12px;
+    transform: rotate(0);
+    transition: transform .18s ease
 }
 
-.folder.open>.folder-name::after {
-  transform: rotate(90deg)
+.folder.open > .folder-name::after {
+    transform: rotate(90deg)
 }
 
 /* Estilo especial para la carpeta raíz (es la primera en la lista) */
-.folders-list .folder:first-child>.folder-name {
-  background: linear-gradient(90deg, rgba(30, 144, 255, 0.12), rgba(30, 144, 255, 0.06));
-  color: var(--text);
-  box-shadow: inset 0 -2px 8px rgba(0, 0, 0, 0.35)
+.folders-list .folder:first-child > .folder-name {
+    background: linear-gradient(90deg, rgba(30, 144, 255, 0.12), rgba(30, 144, 255, 0.06));
+    color: var(--text);
+    box-shadow: inset 0 -2px 8px rgba(0, 0, 0, 0.35)
 }
 
 /* Subcarpetas plegables: por defecto ocultas, se muestran si el contenedor padre tiene la clase open */
 .folder .folder-contents {
-  display: none;
-  margin-left: 8px;
-  padding-left: 6px;
-  border-left: 1px dashed rgba(255, 255, 255, 0.03)
+    display: none;
+    margin-left: 8px;
+    padding-left: 6px;
+    border-left: 1px dashed rgba(255, 255, 255, 0.03)
 }
 
-.folder.open>.folder-contents {
-  display: block
+.folder.open > .folder-contents {
+    display: block
 }
 
 /* Carpeta activa resaltada */
 .folder.active,
-.folder.active>.folder-name {
-  background: linear-gradient(90deg, rgba(30, 144, 255, 0.1), rgba(30, 144, 255, 0.04));
-  border-radius: 6px
+.folder.active > .folder-name {
+    background: linear-gradient(90deg, rgba(30, 144, 255, 0.1), rgba(30, 144, 255, 0.04));
+    border-radius: 6px
 }
 
 /* THUMBS: usar layout flex pequeño y ordenado */
 .thumbs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: flex-start;
-  overflow: auto;
-  padding: 8px;
-  height: 100%;
-  min-height: 0;
-  box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+    overflow: auto;
+    padding: 8px;
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
 }
 
 .thumb {
-  flex: 0 0 72px;
-  /* ancho fijo pequeño */
-  width: 72px;
-  height: 72px;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  background: rgba(0, 0, 0, 0.06);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    flex: 0 0 72px;
+    /* ancho fijo pequeño */
+    width: 72px;
+    height: 72px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    background: rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform .18s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .18s ease;
 }
 
 .thumb:hover img {
-  transform: scale(1.08)
+    transform: scale(1.08)
 }
 
 /* Caption overlay en la miniatura */
 .thumb .caption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 8px 10px;
-  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7));
-  color: #ffffff;
-  font-size: 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 8px 10px;
+    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7));
+    color: #ffffff;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
 }
 
 /* Hover: zoom sutil */
 .thumb:hover img {
-  transform: scale(1.03)
+    transform: scale(1.03)
 }
 
 .thumb img {
-  transition: transform .25s ease
+    transition: transform .25s ease
 }
 
 /* Indicador de selección o foco */
 .thumb:focus-within,
 .thumb:hover {
-  box-shadow: 0 6px 18px rgba(30, 144, 255, 0.08);
-  outline: none
+    box-shadow: 0 6px 18px rgba(30, 144, 255, 0.08);
+    outline: none
 }
 
 .hp-bar {
-  background: var(--muted);
-  border-radius: 6px;
-  height: 10px;
-  overflow: hidden
+    background: var(--muted);
+    border-radius: 6px;
+    height: 10px;
+    overflow: hidden
 }
 
 .hp-fill {
-  background: var(--accent);
-  height: 100%
+    background: var(--accent);
+    height: 100%
 }
 
 .file-label {
-  display: inline-block;
-  padding: 8px 12px;
-  border-radius: 8px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-600));
-  color: #02141a;
-  font-weight: 700;
-  cursor: pointer
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-600));
+    color: #02141a;
+    font-weight: 700;
+    cursor: pointer
 }
 
 /* Estilos específicos para la sección de enemigos */
 .enemy-manager .add-enemy {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .enemy-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-height: 50vh;
-  overflow: auto;
-  margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 50vh;
+    overflow: auto;
+    margin-top: 8px;
 }
 
 .enemy-card {
-  padding: 8px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.03);
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .enemy-card .small {
-  padding: 6px 8px;
+    padding: 6px 8px;
 }
 
 .enemy-card input[type="number"] {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.04);
-  color: var(--text);
-  padding: 6px;
-  border-radius: 6px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    padding: 6px;
+    border-radius: 6px;
 }
 
 /* Estilos para el panel de Import/Export */
 .import-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px;
-  background: linear-gradient(180deg, var(--panel), rgba(8, 30, 40, 0.9));
-  border-radius: var(--radius);
-  border: 1px solid rgba(255,255,255,0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: linear-gradient(180deg, var(--panel), rgba(8, 30, 40, 0.9));
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-.import-panel .controls { display:flex; flex-direction:column; gap:8px }
-.import-panel .controls .row { align-items:center }
+.import-panel .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px
+}
 
-#importExportStatus { min-height:20px; color:var(--muted); font-size:13px }
+.import-panel .controls .row {
+    align-items: center
+}
+
+#importExportStatus {
+    min-height: 20px;
+    color: var(--muted);
+    font-size: 13px
+}
 
 /* Responsive small tweaks */
-@media(min-width:1100px) {
-  .left-col {
-    flex: 0.9
-  }
+@media (min-width: 1100px) {
+    .left-col {
+        flex: 0.9
+    }
 
-  .right-col {
-    flex: 1.1
-  }
+    .right-col {
+        flex: 1.1
+    }
 }
 
 /* simple reset for inputs inside music */
 input,
 select {
-  background: transparent;
-  border: 1px solid var(--muted);
-  color: var(--text);
-  padding: 8px;
-  border-radius: 8px
+    background: transparent;
+    border: 1px solid var(--muted);
+    color: var(--text);
+    padding: 8px;
+    border-radius: 8px
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  outline: none;
-  border-color: var(--accent)
+    outline: none;
+    border-color: var(--accent)
 }
 
 /* small helper classes */
 .row {
-  display: flex;
-  gap: 8px;
-  align-items: center
+    display: flex;
+    gap: 8px;
+    align-items: center
 }
 
 .small {
-  padding: 6px 8px;
-  font-size: 14px
+    padding: 6px 8px;
+    font-size: 14px
 }
 
 /* scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px
+    width: 8px;
+    height: 8px
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--accent-600), var(--accent));
-  border-radius: 6px
+    background: linear-gradient(180deg, var(--accent-600), var(--accent));
+    border-radius: 6px
 }
 
 /* keep default animations subtle */
 * {
-  transition: background .12s ease, border-color .12s ease, color .12s ease
+    transition: background .12s ease, border-color .12s ease, color .12s ease
 }
 
 /* -----------------------
    Estilos añadidos: modal e iniciativa
    ----------------------- */
 .modal {
-  position: fixed;
-  left: 0; top: 0; right: 0; bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 99990;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99990;
 }
+
 .modal-backdrop {
-  position: absolute; left:0; top:0; right:0; bottom:0; background: rgba(0,0,0,0.6);
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
 }
+
 .modal-content {
-  position: relative;
-  z-index: 99991;
-  background: linear-gradient(180deg, var(--panel), var(--panel-variant));
-  border-radius: 12px;
-  padding: 12px;
-  width: 820px;
-  max-width: calc(100% - 40px);
-  max-height: calc(90vh);
-  overflow: auto;
-  border: 1px solid rgba(255,255,255,0.04);
+    position: relative;
+    z-index: 99991;
+    background: linear-gradient(180deg, var(--panel), var(--panel-variant));
+    border-radius: 12px;
+    padding: 12px;
+    width: 820px;
+    max-width: calc(100% - 40px);
+    max-height: calc(90vh);
+    overflow: auto;
+    border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .initiative-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
 }
 
 .participant-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.03);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-.participant-meta { display:flex; gap:8px; align-items:center }
-.participant-name { font-weight:700 }
-.participant-init { font-size: 1.1rem; font-weight:800 }
+.participant-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center
+}
 
-.type-pj { border-left: 6px solid #3aa0ff }
-.type-ally { border-left: 6px solid #3cb371 }
-.type-enemy { border-left: 6px solid #ff4d4d }
+.participant-name {
+    font-weight: 700
+}
+
+.participant-init {
+    font-size: 1.1rem;
+    font-weight: 800
+}
+
+.type-pj {
+    border-left: 6px solid #3aa0ff
+}
+
+.type-ally {
+    border-left: 6px solid #3cb371
+}
+
+.type-enemy {
+    border-left: 6px solid #ff4d4d
+}
 
 /* Ocultar botones de guardado individuales: ahora se usa el botón del header */
-#saveTracks, #saveGroupsBtn { display: none !important; }
+#saveTracks, #saveGroupsBtn {
+    display: none !important;
+}
 
-option  {
+option {
     background: var(--panel);
 }
