@@ -12,7 +12,11 @@
 <body>
   <header class="title-row">
     <h1>Notas</h1>
-    <h1>Música</h1>
+    <!-- Nuevo botón global para importar/exportar música y datos de pelea -->
+    <div style="margin-left:12px; display:flex; gap:8px; align-items:center">
+      <button id="btnImportExport" title="Importar / Exportar datos">Importar / Exportar</button>
+    </div>
+      <h1>Música</h1>
   </header>
 
   <main class="container">
@@ -21,6 +25,10 @@
       <div class="tab-header">
         <button class="tab-button active" data-tab="notesTab">Imágenes</button>
         <button class="tab-button" data-tab="enemiesTab">Enemigos</button>
+        <!-- Botón para abrir la modal de pelea -->
+        <button id="openFightModal" class="tab-button" style="margin-left:6px">Pelea</button>
+        <!-- Pestaña dinámica para Iniciativa (oculta inicialmente) -->
+        <button class="tab-button" data-tab="initiativeTab" style="display:none">Iniciativa</button>
       </div>
 
       <!-- Pestaña 1: Notas e imágenes -->
@@ -54,6 +62,18 @@
             <button id="clearEnemies" class="secondary">Limpiar todos</button>
           </div>
           <div id="enemyList" class="enemy-list" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <!-- Nueva pestaña para la iniciativa (oculta por defecto) -->
+      <div id="initiativeTab" class="left-section" style="display:none">
+        <div class="initiative-panel card-images">
+          <h2>Iniciativa</h2>
+          <div id="initiativeList" class="initiative-list" aria-live="polite"></div>
+          <div style="margin-top:8px">
+            <button id="addFromInitiative" class="small">Añadir participante</button>
+            <button id="clearInitiative" class="small secondary">Limpiar cola</button>
+          </div>
         </div>
       </div>
     </section>
@@ -93,6 +113,38 @@
       </div>
     </section>
   </main>
+
+  <!-- Modal de Pelea (oculto por defecto) -->
+  <div id="fightModal" class="modal" style="display:none" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="fightModalTitle">
+      <h3 id="fightModalTitle">Organizador de Pelea</h3>
+      <form id="fightForm">
+        <div class="row">
+          <input id="participantName" placeholder="Nombre" required />
+          <input id="participantInit" type="number" placeholder="Iniciativa" required />
+          <select id="participantType">
+            <option value="pj">PJ</option>
+            <option value="ally">Aliado</option>
+            <option value="enemy">Enemigo</option>
+          </select>
+          <input id="participantColor" type="color" value="#3aa0ff" title="Color para la tarjeta" />
+        </div>
+        <div style="margin-top:8px; display:flex; gap:8px">
+          <button id="addParticipant" type="button">Añadir participante</button>
+          <button id="closeFightModal" type="button" class="secondary">Cerrar</button>
+        </div>
+      </form>
+      <hr />
+      <div>
+        <h4>Participantes</h4>
+        <div id="fightParticipants" class="initiative-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input oculto para importar archivos JSON -->
+  <input id="importFileInput" type="file" accept="application/json" hidden />
 
   <!-- Nuevo orden de scripts: music.js, YouTube API, images.js, enemies.js, app.js -->
   <script src="music.js"></script>

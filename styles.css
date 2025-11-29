@@ -379,3 +379,58 @@ textarea:focus {
 * {
   transition: background .12s ease, border-color .12s ease, color .12s ease
 }
+
+/* -----------------------
+   Estilos añadidos: modal e iniciativa
+   ----------------------- */
+.modal {
+  position: fixed;
+  left: 0; top: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99990;
+}
+.modal-backdrop {
+  position: absolute; left:0; top:0; right:0; bottom:0; background: rgba(0,0,0,0.6);
+}
+.modal-content {
+  position: relative;
+  z-index: 99991;
+  background: linear-gradient(180deg, var(--panel), var(--panel-variant));
+  border-radius: 12px;
+  padding: 12px;
+  width: 820px;
+  max-width: calc(100% - 40px);
+  max-height: calc(90vh);
+  overflow: auto;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.initiative-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.participant-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.participant-meta { display:flex; gap:8px; align-items:center }
+.participant-name { font-weight:700 }
+.participant-init { font-size: 1.1rem; font-weight:800 }
+
+.type-pj { border-left: 6px solid #3aa0ff }
+.type-ally { border-left: 6px solid #3cb371 }
+.type-enemy { border-left: 6px solid #ff4d4d }
+
+/* Ocultar botones de guardado individuales: ahora se usa el botón del header */
+#saveTracks, #saveGroupsBtn { display: none !important; }

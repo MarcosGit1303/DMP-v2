@@ -160,6 +160,135 @@
     });
   }
 
+  // ------------------
+  // Submódulo: Iniciativa (dmInitiative)
+  // ------------------
+  (function(){
+    const INIT_KEY = 'dm_initiative_v1';
+    let state = { participants: [] };
+
+    function load(){
+      const raw = localStorage.getItem(INIT_KEY);
+      if(!raw) return;
+      try{ state = JSON.parse(raw) || { participants: [] }; }catch{ state = { participants: [] }; }
+      renderInitiativePanel(); renderFightParticipants(); updateInitiativeTabVisibility();
+    }
+    function save(){ localStorage.setItem(INIT_KEY, JSON.stringify(state)); }
+
+    function getState(){ return JSON.parse(JSON.stringify(state)); }
+    function importState(obj){ if(obj && Array.isArray(obj.participants)) { state.participants = obj.participants.slice(); save(); renderInitiativePanel(); renderFightParticipants(); updateInitiativeTabVisibility(); } }
+
+    function addParticipant({ name, initiative, type, color }){
+      const id = 'p' + Date.now() + Math.random().toString(16).slice(2);
+      const p = { id, name: String(name||'').trim() || 'Sin nombre', initiative: Number(initiative) || 0, type: type || 'enemy', color: color || defaultColorFor(type) };
+      state.participants.push(p); save(); renderInitiativePanel(); renderFightParticipants(); updateInitiativeTabVisibility();
+      return p;
+    }
+    function removeParticipant(id){ state.participants = state.participants.filter(x=> String(x.id)!==String(id)); save(); renderInitiativePanel(); renderFightParticipants(); updateInitiativeTabVisibility(); }
+    function updateParticipant(id, props){ const p = state.participants.find(x=> String(x.id)===String(id)); if(!p) return; Object.assign(p, props); save(); renderInitiativePanel(); renderFightParticipants(); }
+
+    function clearAll(){ if(!confirm('¿Limpiar la cola de iniciativa?')) return; state.participants = []; save(); renderInitiativePanel(); renderFightParticipants(); updateInitiativeTabVisibility(); }
+
+    function defaultColorFor(type){ if(type === 'pj') return '#3aa0ff'; if(type === 'ally') return '#3cb371'; return '#ff4d4d'; }
+
+    function getSorted(desc = true){ return state.participants.slice().sort((a,b)=> desc ? (b.initiative - a.initiative) : (a.initiative - b.initiative)); }
+
+    // Render en la pestaña initiativeList (header) y en initiativeTab
+    function renderInitiativePanel(){
+      const list = document.getElementById('initiativeList'); if(!list) return;
+      list.innerHTML = '';
+      const sorted = getSorted(true);
+      sorted.forEach(p => {
+        const card = document.createElement('div'); card.className = 'participant-card ' + (p.type ? ('type-' + p.type) : '');
+        // aplicar color si existe
+        if(p.color) card.style.borderLeftColor = p.color;
+        const meta = document.createElement('div'); meta.className = 'participant-meta';
+        const nameEl = document.createElement('div'); nameEl.className = 'participant-name'; nameEl.textContent = p.name;
+        const initEl = document.createElement('div'); initEl.className = 'participant-init'; initEl.textContent = p.initiative;
+        meta.appendChild(nameEl); meta.appendChild(initEl);
+        const ctrls = document.createElement('div');
+        const del = document.createElement('button'); del.className='small secondary'; del.textContent='Eliminar'; del.addEventListener('click', ()=> removeParticipant(p.id));
+        const edit = document.createElement('button'); edit.className='small'; edit.textContent='Editar'; edit.addEventListener('click', ()=> openEditInModal(p.id));
+        ctrls.appendChild(edit); ctrls.appendChild(del);
+        card.appendChild(meta); card.appendChild(ctrls);
+        // aplicar color de fondo ligero
+        if(p.color) card.style.background = 'linear-gradient(90deg, rgba(255,255,255,0.02), '+p.color+'22)';
+        list.appendChild(card);
+      });
+    }
+
+    // Render lista dentro de la modal (#fightParticipants)
+    function renderFightParticipants(){
+      const el = document.getElementById('fightParticipants'); if(!el) return; el.innerHTML = '';
+      const sorted = getSorted(true);
+      sorted.forEach(p => {
+        const row = document.createElement('div'); row.className = 'participant-card ' + (p.type ? ('type-' + p.type) : '');
+        if(p.color) row.style.borderLeftColor = p.color;
+        const meta = document.createElement('div'); meta.className = 'participant-meta';
+        const nameEl = document.createElement('div'); nameEl.className = 'participant-name'; nameEl.textContent = p.name;
+        const initEl = document.createElement('div'); initEl.className = 'participant-init'; initEl.textContent = p.initiative;
+        meta.appendChild(nameEl); meta.appendChild(initEl);
+        const ctrls = document.createElement('div');
+        const del = document.createElement('button'); del.className='small secondary'; del.textContent='Eliminar'; del.addEventListener('click', ()=> removeParticipant(p.id));
+        const edit = document.createElement('button'); edit.className='small'; edit.textContent='Editar'; edit.addEventListener('click', ()=> openEditInModal(p.id));
+        ctrls.appendChild(edit); ctrls.appendChild(del);
+        row.appendChild(meta); row.appendChild(ctrls);
+        if(p.color) row.style.background = 'linear-gradient(90deg, rgba(255,255,255,0.02), '+p.color+'22)';
+        el.appendChild(row);
+      });
+    }
+
+    // Interacciones con la modal
+    function openFightModal(){
+      const m = document.getElementById('fightModal'); if(!m) return; m.style.display = 'flex'; m.setAttribute('aria-hidden','false');
+      const name = document.getElementById('participantName'); if(name) name.focus();
+      renderFightParticipants();
+    }
+    function closeFightModal(){ const m = document.getElementById('fightModal'); if(!m) return; m.style.display='none'; m.setAttribute('aria-hidden','true'); }
+
+    function openEditInModal(id){ const p = state.participants.find(x=> String(x.id)===String(id)); if(!p) return; openFightModal();
+      document.getElementById('participantName').value = p.name; document.getElementById('participantInit').value = p.initiative; document.getElementById('participantType').value = p.type; document.getElementById('participantColor').value = p.color || defaultColorFor(p.type);
+      // store editing id temporarily
+      document.getElementById('addParticipant').dataset.editing = id;
+    }
+
+    // Añadir desde modal y manejar edición
+    function setupModalBindings(){
+      const openBtn = document.getElementById('openFightModal'); if(openBtn) openBtn.addEventListener('click', openFightModal);
+      const closeBtn = document.getElementById('closeFightModal'); if(closeBtn) closeBtn.addEventListener('click', closeFightModal);
+      const addBtn = document.getElementById('addParticipant');
+      if(addBtn){
+        addBtn.addEventListener('click', ()=>{
+          const name = document.getElementById('participantName').value;
+          const initiative = Number(document.getElementById('participantInit').value);
+          const type = document.getElementById('participantType').value;
+          const color = document.getElementById('participantColor').value;
+          const editing = addBtn.dataset.editing;
+          if(editing){ updateParticipant(editing, { name, initiative, type, color }); delete addBtn.dataset.editing; document.getElementById('participantName').value=''; document.getElementById('participantInit').value=''; }
+          else addParticipant({ name, initiative, type, color });
+          renderInitiativePanel(); renderFightParticipants(); updateInitiativeTabVisibility();
+        });
+      }
+
+      const clearBtn = document.getElementById('clearInitiative'); if(clearBtn) clearBtn.addEventListener('click', clearAll);
+      const addFromTab = document.getElementById('addFromInitiative'); if(addFromTab) addFromTab.addEventListener('click', openFightModal);
+      // cerrar modal con ESC
+      document.addEventListener('keydown', e => { if(e.key === 'Escape'){ const m = document.getElementById('fightModal'); if(m && m.style.display !== 'none') closeFightModal(); } });
+    }
+
+    function updateInitiativeTabVisibility(){
+      const tabBtn = Array.from(document.querySelectorAll('.tab-button')).find(b=> b.dataset && b.dataset.tab === 'initiativeTab');
+      const container = document.getElementById('initiativeTab');
+      if(!container) return;
+      if(state.participants.length === 0){ container.style.display = 'none'; if(tabBtn) tabBtn.style.display = 'none'; }
+      else { container.style.display = ''; if(tabBtn) { tabBtn.style.display = ''; tabBtn.textContent = 'Iniciativa (' + state.participants.length + ')'; } }
+    }
+
+    // Exponer API y inicializar
+    window.dmInitiative = { addParticipant, removeParticipant, updateParticipant, getState, importState, openFightModal, closeFightModal };
+    load(); setupModalBindings();
+  })();
+
   // Inicializador que conecta eventos del UI superior
   function init(){
     const addBtn = document.getElementById('addEnemy');

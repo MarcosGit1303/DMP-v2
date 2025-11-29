@@ -49,7 +49,7 @@
       cur += delta;
       const v = Math.max(0, Math.min(100, Math.round(cur)));
       try { p.setVolume(v); } catch { }
-      if (i >= steps) { clearInterval(id); try { p.setVolume(to); } catch { }; res(); }
+      if (i >= steps) { clearInterval(id); try { p.setVolume(to); } catch { } res(); }
     }, Math.round(dur / steps));
   });
 
@@ -68,6 +68,62 @@
     renderTracksList(); initAllPlayers();
   };
   const saveTracks = ()=> localStorage.setItem(TRACKS_KEY, JSON.stringify(tracks));
+
+  // Exportar e importar datos (tracks + groups + opcional initiative)
+  function downloadBlob(blob, filename){
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }
+
+  function exportData(options = { includeInitiative: false }){
+    const payload = { tracks: tracks, groups: groups };
+    try{
+      if(options.includeInitiative && window.dmInitiative && window.dmInitiative.getState){ payload.initiative = window.dmInitiative.getState(); }
+    }catch(e){ /* noop */ }
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    downloadBlob(blob, 'dm_export_' + Date.now() + '.json');
+  }
+
+  function importDataFromFile(file){
+    if(!file) return Promise.reject(new Error('No file'));
+    return new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        try{
+          const obj = JSON.parse(String(e.target.result));
+          if(obj.tracks && Array.isArray(obj.tracks)) { tracks = obj.tracks; saveTracks(); renderTracksList(); initAllPlayers(); }
+          if(obj.groups && Array.isArray(obj.groups)) { groups = obj.groups; saveGroups(); renderGroups(); renderTracksList(); }
+          if(obj.initiative && window.dmInitiative && typeof window.dmInitiative.importState === 'function'){
+            try{ window.dmInitiative.importState(obj.initiative); }catch(e){ console.warn('import iniciativa error', e); }
+          }
+          res(obj);
+        }catch(err){ rej(err); }
+      };
+      reader.onerror = () => rej(new Error('file read error'));
+      reader.readAsText(file);
+    });
+  }
+
+  // Conectar UI global de import/export si existe
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const btn = document.getElementById('btnImportExport');
+    const input = document.getElementById('importFileInput');
+    if(btn){
+      btn.addEventListener('click', ()=>{
+        const choice = confirm('Presiona Aceptar para exportar (incluir iniciativa si existe). Cancelar para importar.');
+        if(choice) exportData({ includeInitiative: true });
+        else if(input) input.click();
+      });
+    }
+    if(input){
+      input.addEventListener('change', (e)=>{
+        const f = e.target.files && e.target.files[0];
+        if(!f) return;
+        importDataFromFile(f).then(()=> alert('Importación completada')).catch(err=> alert('Error importando JSON: ' + (err && err.message ? err.message : String(err))));
+        input.value = '';
+      });
+    }
+  });
 
   function renderGroups(){
     if(!groupsListEl) return;
@@ -126,7 +182,7 @@
   function renderTracksList(){
     if(!tracksList) return;
     tracksList.innerHTML = '';
-    players = players.filter(x=> false);
+    players = [];
     tracks.forEach((t, index) => {
       const block = document.createElement('div'); block.className = 'track'; block.id = 'track_' + index;
       block.innerHTML = `
@@ -268,15 +324,18 @@
     });
   });
 
-  window.dmMusic = {
+  // Exponer API de export/import
+  window.dmMusic = Object.assign(window.dmMusic || {}, {
     init(){ loadGroups(); loadTracks(); renderGroups(); renderTracksList(); initAllPlayers(); },
     initAllPlayers,
     get tracks(){ return tracks; },
     get groups(){ return groups; },
     get players(){ return players; },
     applyGroupVolumes,
-    controlGroup
-  };
+    controlGroup,
+    exportData,
+    importDataFromFile
+  });
 
   window.onYouTubeIframeAPIReady = () => { YTready = true; try{ window.dmMusic && window.dmMusic.initAllPlayers(); }catch{} };
 
