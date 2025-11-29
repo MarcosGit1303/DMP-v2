@@ -59,8 +59,9 @@
   // Renderiza la lista completa de enemigos en #enemyList
   function renderEnemies(){
     const list = document.getElementById('enemyList');
-    if(!list) return;
-    list.innerHTML = '';
+    const listForInit = document.getElementById('enemyListForInitiative');
+    if(list) list.innerHTML = '';
+    if(listForInit) listForInit.innerHTML = '';
 
     enemies.forEach(e => {
       const card = document.createElement('div');
@@ -156,7 +157,27 @@
       card.appendChild(hpBar);
       card.appendChild(hpText);
 
-      list.appendChild(card);
+      if(list) list.appendChild(card);
+
+      // También crear una versión simplificada para la pestaña de iniciativa
+      if(listForInit){
+        const card2 = document.createElement('div');
+        card2.className = 'enemy-card';
+        const row = document.createElement('div');
+        row.style.display = 'flex'; row.style.justifyContent = 'space-between'; row.style.alignItems = 'center';
+        const left = document.createElement('div'); left.textContent = e.name + ' ' + e.current + '/' + e.hp + ' HP';
+        const ctrls = document.createElement('div'); ctrls.style.display = 'flex'; ctrls.style.gap = '6px';
+        const m1 = document.createElement('button'); m1.className='small'; m1.textContent='-1'; m1.addEventListener('click', ()=> updateHP(e.id, -1));
+        const p1 = document.createElement('button'); p1.className='small'; p1.textContent='+1'; p1.addEventListener('click', ()=> updateHP(e.id, 1));
+        const del1 = document.createElement('button'); del1.className='small secondary'; del1.textContent='Eliminar'; del1.addEventListener('click', ()=> { if(confirm('¿Eliminar ' + e.name + '?')) removeEnemy(e.id); });
+        ctrls.appendChild(m1); ctrls.appendChild(p1); ctrls.appendChild(del1);
+        row.appendChild(left); row.appendChild(ctrls);
+        card2.appendChild(row);
+        const hpBar2 = document.createElement('div'); hpBar2.className='hp-bar'; const hpFill2 = document.createElement('div'); hpFill2.className='hp-fill'; hpFill2.style.width = pct + '%'; hpBar2.appendChild(hpFill2);
+        card2.appendChild(hpBar2);
+        if(listForInit) listForInit.appendChild(card2);
+      }
+
     });
   }
 
@@ -242,6 +263,14 @@
     function openFightModal(){
       const m = document.getElementById('fightModal'); if(!m) return; m.style.display = 'flex'; m.setAttribute('aria-hidden','false');
       const name = document.getElementById('participantName'); if(name) name.focus();
+      // Establecer color por defecto según el tipo seleccionado (PJ/Aliado/Enemigo)
+      try{
+        const typeEl = document.getElementById('participantType');
+        const colorEl = document.getElementById('participantColor');
+        if(typeEl && colorEl){
+          colorEl.value = defaultColorFor(typeEl.value);
+        }
+      }catch(e){ /* noop */ }
       renderFightParticipants();
     }
     function closeFightModal(){ const m = document.getElementById('fightModal'); if(!m) return; m.style.display='none'; m.setAttribute('aria-hidden','true'); }
@@ -257,6 +286,12 @@
       const openBtn = document.getElementById('openFightModal'); if(openBtn) openBtn.addEventListener('click', openFightModal);
       const closeBtn = document.getElementById('closeFightModal'); if(closeBtn) closeBtn.addEventListener('click', closeFightModal);
       const addBtn = document.getElementById('addParticipant');
+      // Listener: cuando el tipo cambia, fijar el color por defecto (el usuario puede modificarlo después)
+      const typeEl = document.getElementById('participantType');
+      const colorEl = document.getElementById('participantColor');
+      if(typeEl && colorEl){
+        typeEl.addEventListener('change', (e) => { try{ colorEl.value = defaultColorFor(e.target.value); }catch(err){} });
+      }
       if(addBtn){
         addBtn.addEventListener('click', ()=>{
           const name = document.getElementById('participantName').value;

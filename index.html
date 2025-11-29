@@ -14,7 +14,8 @@
     <h1>Notas</h1>
     <!-- Nuevo botón global para importar/exportar música y datos de pelea -->
     <div style="margin-left:12px; display:flex; gap:8px; align-items:center">
-      <button id="btnImportExport" title="Importar / Exportar datos">Importar / Exportar</button>
+      <button id="btnImportExport" class="tab-button" title="Importar / Exportar datos">Importar / Exportar</button>
+      <button id="openFightModal" class="tab-button" title="Pelea">Pelea</button>
     </div>
       <h1>Música</h1>
   </header>
@@ -25,10 +26,6 @@
       <div class="tab-header">
         <button class="tab-button active" data-tab="notesTab">Imágenes</button>
         <button class="tab-button" data-tab="enemiesTab">Enemigos</button>
-        <!-- Botón para abrir la modal de pelea -->
-        <button id="openFightModal" class="tab-button" style="margin-left:6px">Pelea</button>
-        <!-- Pestaña dinámica para Iniciativa (oculta inicialmente) -->
-        <button class="tab-button" data-tab="initiativeTab" style="display:none">Iniciativa</button>
       </div>
 
       <!-- Pestaña 1: Notas e imágenes -->
@@ -64,18 +61,6 @@
           <div id="enemyList" class="enemy-list" aria-live="polite"></div>
         </div>
       </div>
-
-      <!-- Nueva pestaña para la iniciativa (oculta por defecto) -->
-      <div id="initiativeTab" class="left-section" style="display:none">
-        <div class="initiative-panel card-images">
-          <h2>Iniciativa</h2>
-          <div id="initiativeList" class="initiative-list" aria-live="polite"></div>
-          <div style="margin-top:8px">
-            <button id="addFromInitiative" class="small">Añadir participante</button>
-            <button id="clearInitiative" class="small secondary">Limpiar cola</button>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- Columna derecha -->
@@ -84,6 +69,10 @@
         <div class="tab-header">
           <button class="tab-button active" data-tab="musicTab">Música</button>
           <button class="tab-button" data-tab="groupsTab">Grupos</button>
+          <button class="tab-button" data-tab="initiativeTab" style="display:none">Iniciativa</button>
+            <!-- (Pelea movido al header) -->
+            <!-- Pestaña dinámica para Iniciativa (oculta inicialmente) -->
+            <button class="tab-button" data-tab="initiativeTab" style="display:none">Iniciativa</button>
         </div>
 
         <div id="musicTab" class="music-section active">
@@ -110,6 +99,22 @@
             <div id="groupsList" class="groups-list"></div>
           </div>
         </div>
+
+        <!-- Pestaña de Iniciativa ahora en la columna derecha -->
+        <div id="initiativeTab" class="music-section" style="display:none">
+          <div class="initiative-panel card-images">
+            <h2>Iniciativa</h2>
+            <div id="initiativeList" class="initiative-list" aria-live="polite"></div>
+            <div style="margin-top:8px">
+              <button id="addFromInitiative" class="small">Añadir participante</button>
+              <button id="clearInitiative" class="small secondary">Limpiar cola</button>
+            </div>
+            <hr />
+            <h4>Vida de Enemigos</h4>
+            <div id="enemyListForInitiative" class="enemy-list" aria-live="polite"></div>
+          </div>
+        </div>
+
       </div>
     </section>
   </main>

@@ -450,3 +450,7 @@ textarea:focus {
 
 /* Ocultar botones de guardado individuales: ahora se usa el botón del header */
 #saveTracks, #saveGroupsBtn { display: none !important; }
+
+option  {
+    background: var(--panel);
+}
