@@ -107,22 +107,81 @@
   // Conectar UI global de import/export si existe
   document.addEventListener('DOMContentLoaded', ()=>{
     const btn = document.getElementById('btnImportExport');
-    const input = document.getElementById('importFileInput');
+    const tabBtn = document.querySelector('.tab-button[data-tab="importTab"]');
+
+    // Referencias al modal
+    const importModal = document.getElementById('importModal');
+    const modalExportBtn = document.getElementById('modalExportBtn');
+    const modalInput = document.getElementById('importFileInput');
+    const modalIncludeChk = document.getElementById('modalIncludeInitiative');
+    const modalStatus = document.getElementById('importModalStatus');
+    const closeImportModal = document.getElementById('closeImportModal');
+
+    // Referencias al panel lateral (se mantienen, opcional)
+    const exportBtn = document.getElementById('exportBtn');
+    const includeChk = document.getElementById('includeInitiative');
+    const statusEl = document.getElementById('importExportStatus');
+
+    const setStatus = (el, msg, isError=false) => { if(el) { el.textContent = msg; el.style.color = isError ? '#ffb4b4' : 'var(--muted)'; } };
+
+    const openModal = (m) => { if(!m) return; m.style.display = 'flex'; m.setAttribute('aria-hidden', 'false'); };
+    const closeModal = (m) => { if(!m) return; m.style.display = 'none'; m.setAttribute('aria-hidden', 'true'); };
+
+    const openImportModal = () => { if(importModal) { openModal(importModal); if(modalExportBtn) modalExportBtn.focus(); } };
+    const closeImportModalFn = () => { if(importModal) closeModal(importModal); };
+
     if(btn){
       btn.addEventListener('click', ()=>{
+        // Preferir abrir modal (comportamiento solicitado: similar a botón de pelea)
+        if(importModal){ openImportModal(); return; }
+        // Si no hay modal, abrir la pestaña lateral (legacy)
+        if(tabBtn){ tabBtn.click(); const focus = exportBtn; if(focus) focus.focus(); return; }
+        // último fallback: confirm
         const choice = confirm('Presiona Aceptar para exportar (incluir iniciativa si existe). Cancelar para importar.');
         if(choice) exportData({ includeInitiative: true });
-        else if(input) input.click();
+        else if(modalInput) modalInput.click();
       });
     }
-    if(input){
-      input.addEventListener('change', (e)=>{
-        const f = e.target.files && e.target.files[0];
-        if(!f) return;
-        importDataFromFile(f).then(()=> alert('Importación completada')).catch(err=> alert('Error importando JSON: ' + (err && err.message ? err.message : String(err))));
-        input.value = '';
+
+    if(closeImportModal){ closeImportModal.addEventListener('click', closeImportModalFn); }
+
+    if(modalExportBtn){
+      modalExportBtn.addEventListener('click', ()=>{
+        const include = !!(modalIncludeChk && modalIncludeChk.checked);
+        try{ setStatus(modalStatus, 'Preparando exportación...'); exportData({ includeInitiative: include }); setStatus(modalStatus, 'Exportación completada (descarga iniciada)'); setTimeout(()=> setStatus(modalStatus, ''), 2500); }catch(e){ setStatus(modalStatus, 'Error exportando: ' + (e && e.message ? e.message : String(e)), true); }
       });
     }
+
+    if(modalInput){
+      modalInput.addEventListener('change', (e)=>{
+        const f = e.target.files && e.target.files[0]; if(!f) return;
+        setStatus(modalStatus, 'Importando...');
+        importDataFromFile(f).then(()=> { setStatus(modalStatus, 'Importación completada'); setTimeout(()=> setStatus(modalStatus, ''), 2400); })
+          .catch(err=> { setStatus(modalStatus, 'Error importando: ' + (err && err.message ? err.message : String(err)), true); });
+        modalInput.value = '';
+      });
+    }
+
+    // Mantener los botones del panel lateral funcionales (opcional)
+    if(exportBtn){
+      exportBtn.addEventListener('click', ()=>{
+        const include = !!(includeChk && includeChk.checked);
+        try{ setStatus(statusEl, 'Preparando exportación...'); exportData({ includeInitiative: include }); setStatus(statusEl, 'Exportación completada (descarga iniciada)'); setTimeout(()=> setStatus(statusEl, ''), 2500); }catch(e){ setStatus(statusEl, 'Error exportando: ' + (e && e.message ? e.message : String(e)), true); }
+      });
+    }
+
+    if(includeChk && modalIncludeChk){
+      // sincronizar estados entre checkbox del panel y el modal si ambos están presentes
+      includeChk.addEventListener('change', ()=> { if(modalIncludeChk) modalIncludeChk.checked = includeChk.checked; });
+      modalIncludeChk.addEventListener('change', ()=> { if(includeChk) includeChk.checked = modalIncludeChk.checked; });
+    }
+
+    // cerrar modal con ESC (paridad con fightModal)
+    document.addEventListener('keydown', e => { if(e.key === 'Escape'){ if(importModal && importModal.style.display !== 'none') closeImportModalFn(); } });
+
+    // Exponer apertura/cierre programática
+    window.dmMusic = Object.assign(window.dmMusic || {}, { openImportModal, closeImportModal: closeImportModalFn });
+
   });
 
   function renderGroups(){

@@ -324,6 +324,22 @@ body {
   border-radius: 6px;
 }
 
+/* Estilos para el panel de Import/Export */
+.import-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: linear-gradient(180deg, var(--panel), rgba(8, 30, 40, 0.9));
+  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.import-panel .controls { display:flex; flex-direction:column; gap:8px }
+.import-panel .controls .row { align-items:center }
+
+#importExportStatus { min-height:20px; color:var(--muted); font-size:13px }
+
 /* Responsive small tweaks */
 @media(min-width:1100px) {
   .left-col {

@@ -143,8 +143,25 @@
     </div>
   </div>
 
-  <!-- Input oculto para importar archivos JSON -->
-  <input id="importFileInput" type="file" accept="application/json" hidden />
+  <!-- Modal de Import/Export (similar a fightModal) -->
+  <div id="importModal" class="modal" style="display:none" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
+      <h3 id="importModalTitle">Importar / Exportar datos</h3>
+      <div class="row" style="margin-top:6px;">
+        <button id="modalExportBtn">Exportar (descargar JSON)</button>
+        <label class="file-label" for="importFileInput">Seleccionar archivo</label>
+        <input id="importFileInput" type="file" accept="application/json" hidden />
+      </div>
+      <div style="margin-top:8px; display:flex; gap:8px; align-items:center">
+        <label style="display:flex; align-items:center; gap:8px"><input id="modalIncludeInitiative" type="checkbox" /> Incluir iniciativa</label>
+        <button id="closeImportModal" type="button" class="secondary">Cerrar</button>
+      </div>
+      <hr />
+      <div id="importModalStatus" aria-live="polite" style="margin-top:8px; font-size:13px; color:var(--muted)"></div>
+    </div>
+  </div>
+
 
   <!-- Nuevo orden de scripts: music.js, YouTube API, images.js, enemies.js, app.js -->
   <script src="music.js"></script>
