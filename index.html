@@ -2,173 +2,166 @@
 <html lang="es">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pantalla DM V2</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="stylesMusic.css" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Pantalla DM V2</title>
+    <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="stylesMusic.css"/>
 </head>
 
 <body>
-  <header class="title-row">
+<header class="title-row">
     <h1>Notas</h1>
-    <!-- Nuevo botón global para importar/exportar música y datos de pelea -->
     <div style="margin-left:12px; display:flex; gap:8px; align-items:center">
-      <button id="btnImportExport" title="Importar / Exportar datos">Importar / Exportar</button>
+        <button id="btnImportExport" class="tab-button" title="Importar / Exportar datos">Importar / Exportar</button>
+        <button id="openFightModal" class="tab-button" title="Pelea">Pelea</button>
     </div>
-      <h1>Música</h1>
-  </header>
+    <h1>Música</h1>
+</header>
 
-  <main class="container">
-    <!-- Columna izquierda -->
+<main class="container">
     <section class="left-col">
-      <div class="tab-header">
-        <button class="tab-button active" data-tab="notesTab">Imágenes</button>
-        <button class="tab-button" data-tab="enemiesTab">Enemigos</button>
-        <!-- Botón para abrir la modal de pelea -->
-        <button id="openFightModal" class="tab-button" style="margin-left:6px">Pelea</button>
-        <!-- Pestaña dinámica para Iniciativa (oculta inicialmente) -->
-        <button class="tab-button" data-tab="initiativeTab" style="display:none">Iniciativa</button>
-      </div>
-
-      <!-- Pestaña 1: Notas e imágenes -->
-      <div id="notesTab" class="left-section active">
-        <div class="card-images">
-          <h2>Imágenes</h2>
-          <div class="images-browser">
-            <div id="foldersList" class="folders-list"></div>
-            <div id="thumbs" class="thumbs" aria-live="polite"></div>
-          </div>
-
-          <div class="images-controls">
-            <label for="imagesInput" class="file-label">📸 Añadir imágenes</label>
-            <input id="imagesInput" type="file" accept="image/*" multiple webkitdirectory hidden />
-
-            <button id="clearImages" class="secondary">Limpiar</button>
-            <button id="openViewer">Abrir pantalla jugadores</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pestaña 2: Enemigos -->
-      <div id="enemiesTab" class="left-section">
-        <div class="enemy-manager">
-          <div class="add-enemy">
-            <input id="enemyName" placeholder="Nombre del enemigo" />
-            <input id="enemyHP" type="number" min="1" placeholder="HP total" />
-            <input id="enemyAC" type="number" min="0" placeholder="AC" />
-            <input id="enemySpeed" type="number" min="0" placeholder="Velocidad" />
-            <button id="addEnemy">Añadir enemigo</button>
-            <button id="clearEnemies" class="secondary">Limpiar todos</button>
-          </div>
-          <div id="enemyList" class="enemy-list" aria-live="polite"></div>
-        </div>
-      </div>
-
-      <!-- Nueva pestaña para la iniciativa (oculta por defecto) -->
-      <div id="initiativeTab" class="left-section" style="display:none">
-        <div class="initiative-panel card-images">
-          <h2>Iniciativa</h2>
-          <div id="initiativeList" class="initiative-list" aria-live="polite"></div>
-          <div style="margin-top:8px">
-            <button id="addFromInitiative" class="small">Añadir participante</button>
-            <button id="clearInitiative" class="small secondary">Limpiar cola</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Columna derecha -->
-    <section class="right-col">
-      <div id="playersContainer" class="card-music music-card">
         <div class="tab-header">
-          <button class="tab-button active" data-tab="musicTab">Música</button>
-          <button class="tab-button" data-tab="groupsTab">Grupos</button>
+            <button class="tab-button active" data-tab="notesTab">Imágenes</button>
+            <button class="tab-button" data-tab="enemiesTab">Enemigos</button>
         </div>
 
-        <div id="musicTab" class="music-section active">
-          <div class="card-header">
-            <h2>Reproductor de YouTube</h2>
-            <div class="add-row">
-              <input id="ytUrl" placeholder="Pega URL de YouTube (https://...)" />
-              <input id="ytName" placeholder="Nombre de la canción (opcional)" />
-              <button id="addTrack">Añadir</button>
-              <button id="saveTracks">Guardar</button>
-              <button id="clearTracks">Eliminar</button>
+        <div id="notesTab" class="left-section active">
+            <div class="card-images">
+                <h2>Imágenes</h2>
+                <div class="images-browser">
+                    <div id="foldersList" class="folders-list"></div>
+                    <div id="thumbs" class="thumbs" aria-live="polite"></div>
+                </div>
+
+                <div class="images-controls">
+                    <label for="imagesInput" class="file-label">📸 Añadir imágenes</label>
+                    <input id="imagesInput" type="file" accept="image/*" multiple webkitdirectory hidden/>
+
+                    <button id="clearImages" class="secondary">Limpiar</button>
+                    <button id="openViewer">Abrir pantalla jugadores</button>
+                </div>
             </div>
-          </div>
-          <div id="tracksList" class="tracks-list" aria-live="polite"></div>
         </div>
 
-        <div id="groupsTab" class="music-section">
-          <div class="group-row">
-            <div class="creator">
-              <input id="groupName" placeholder="Nombre grupo..." />
-              <button id="createGroup">Crear grupo</button>
-              <button id="saveGroupsBtn" class="small">Guardar grupos</button>
+        <div id="enemiesTab" class="left-section">
+            <div class="enemy-manager">
+                <div class="add-enemy">
+                    <input id="enemyName" placeholder="Nombre del enemigo"/>
+                    <input id="enemyHP" type="number" min="1" placeholder="HP total"/>
+                    <input id="enemyAC" type="number" min="0" placeholder="AC"/>
+                    <input id="enemySpeed" type="number" min="0" placeholder="Velocidad"/>
+                    <button id="addEnemy">Añadir enemigo</button>
+                    <button id="clearEnemies" class="secondary">Limpiar todos</button>
+                </div>
+                <div id="enemyList" class="enemy-list" aria-live="polite"></div>
             </div>
-            <div id="groupsList" class="groups-list"></div>
-          </div>
         </div>
-      </div>
     </section>
-  </main>
 
-  <!-- Modal de Pelea (oculto por defecto) -->
-  <div id="fightModal" class="modal" style="display:none" aria-hidden="true">
+    <section class="right-col">
+        <div id="playersContainer" class="card-music music-card">
+            <div class="tab-header">
+                <button class="tab-button active" data-tab="musicTab">Música</button>
+                <button class="tab-button" data-tab="groupsTab">Grupos</button>
+                <button class="tab-button" data-tab="initiativeTab" style="display:none">Iniciativa</button>
+            </div>
+
+            <div id="musicTab" class="music-section active">
+                <div class="card-header">
+                    <h2>Reproductor de YouTube</h2>
+                    <div class="add-row">
+                        <input id="ytUrl" placeholder="Pega URL de YouTube (https://...)"/>
+                        <input id="ytName" placeholder="Nombre de la canción (opcional)"/>
+                        <button id="addTrack">Añadir</button>
+                        <button id="saveTracks">Guardar</button>
+                        <button id="clearTracks">Eliminar</button>
+                    </div>
+                </div>
+                <div id="tracksList" class="tracks-list" aria-live="polite"></div>
+            </div>
+
+            <div id="groupsTab" class="music-section">
+                <div class="group-row">
+                    <div class="creator">
+                        <input id="groupName" placeholder="Nombre grupo..."/>
+                        <button id="createGroup">Crear grupo</button>
+                        <button id="saveGroupsBtn" class="small">Guardar grupos</button>
+                    </div>
+                    <div id="groupsList" class="groups-list"></div>
+                </div>
+            </div>
+
+            <div id="initiativeTab" class="music-section" style="display:none">
+                <div class="initiative-panel card-images">
+                    <h2>Iniciativa</h2>
+                    <div id="initiativeList" class="initiative-list" aria-live="polite"></div>
+                    <div style="margin-top:8px">
+                        <button id="addFromInitiative" class="small">Añadir participante</button>
+                        <button id="clearInitiative" class="small secondary">Limpiar cola</button>
+                    </div>
+                    <hr/>
+                    <h4>Vida de Enemigos</h4>
+                    <div id="enemyListForInitiative" class="enemy-list" aria-live="polite"></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<div id="fightModal" class="modal" style="display:none" aria-hidden="true">
     <div class="modal-backdrop"></div>
     <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="fightModalTitle">
-      <h3 id="fightModalTitle">Organizador de Pelea</h3>
-      <form id="fightForm">
-        <div class="row">
-          <input id="participantName" placeholder="Nombre" required />
-          <input id="participantInit" type="number" placeholder="Iniciativa" required />
-          <select id="participantType">
-            <option value="pj">PJ</option>
-            <option value="ally">Aliado</option>
-            <option value="enemy">Enemigo</option>
-          </select>
-          <input id="participantColor" type="color" value="#3aa0ff" title="Color para la tarjeta" />
+        <h3 id="fightModalTitle">Organizador de Pelea</h3>
+        <form id="fightForm">
+            <div class="row">
+                <input id="participantName" placeholder="Nombre" required/>
+                <input id="participantInit" type="number" placeholder="Iniciativa" required/>
+                <select id="participantType">
+                    <option value="pj">PJ</option>
+                    <option value="ally">Aliado</option>
+                    <option value="enemy">Enemigo</option>
+                </select>
+                <input id="participantColor" type="color" value="#3aa0ff" title="Color para la tarjeta"/>
+            </div>
+            <div style="margin-top:8px; display:flex; gap:8px">
+                <button id="addParticipant" type="button">Añadir participante</button>
+                <button id="closeFightModal" type="button" class="secondary">Cerrar</button>
+            </div>
+        </form>
+        <hr/>
+        <div>
+            <h4>Participantes</h4>
+            <div id="fightParticipants" class="initiative-list"></div>
         </div>
-        <div style="margin-top:8px; display:flex; gap:8px">
-          <button id="addParticipant" type="button">Añadir participante</button>
-          <button id="closeFightModal" type="button" class="secondary">Cerrar</button>
-        </div>
-      </form>
-      <hr />
-      <div>
-        <h4>Participantes</h4>
-        <div id="fightParticipants" class="initiative-list"></div>
-      </div>
     </div>
-  </div>
+</div>
 
-  <!-- Modal de Import/Export (similar a fightModal) -->
-  <div id="importModal" class="modal" style="display:none" aria-hidden="true">
+<div id="importModal" class="modal" style="display:none" aria-hidden="true">
     <div class="modal-backdrop"></div>
     <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
-      <h3 id="importModalTitle">Importar / Exportar datos</h3>
-      <div class="row" style="margin-top:6px;">
-        <button id="modalExportBtn">Exportar (descargar JSON)</button>
-        <label class="file-label" for="importFileInput">Seleccionar archivo</label>
-        <input id="importFileInput" type="file" accept="application/json" hidden />
-      </div>
-      <div style="margin-top:8px; display:flex; gap:8px; align-items:center">
-        <label style="display:flex; align-items:center; gap:8px"><input id="modalIncludeInitiative" type="checkbox" /> Incluir iniciativa</label>
-        <button id="closeImportModal" type="button" class="secondary">Cerrar</button>
-      </div>
-      <hr />
-      <div id="importModalStatus" aria-live="polite" style="margin-top:8px; font-size:13px; color:var(--muted)"></div>
+        <h3 id="importModalTitle">Importar / Exportar datos</h3>
+        <div class="row" style="margin-top:6px;">
+            <button id="modalExportBtn">Exportar (descargar JSON)</button>
+            <label class="file-label" for="importFileInput">Seleccionar archivo</label>
+            <input id="importFileInput" type="file" accept="application/json" hidden/>
+        </div>
+        <div style="margin-top:8px; display:flex; gap:8px; align-items:center">
+            <label style="display:flex; align-items:center; gap:8px"><input id="modalIncludeInitiative"
+                                                                            type="checkbox"/> Incluir iniciativa</label>
+            <button id="closeImportModal" type="button" class="secondary">Cerrar</button>
+        </div>
+        <hr/>
+        <div id="importModalStatus" aria-live="polite" style="margin-top:8px; font-size:13px; color:var(--muted)"></div>
     </div>
-  </div>
+</div>
 
-
-  <!-- Nuevo orden de scripts: music.js, YouTube API, images.js, enemies.js, app.js -->
-  <script src="music.js"></script>
-  <script src="https://www.youtube.com/iframe_api"></script>
-  <script src="images.js"></script>
-  <script src="enemies.js"></script>
-  <script src="app.js"></script>
+<script src="music.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="images.js"></script>
+<script src="enemies.js"></script>
+<script src="app.js"></script>
 </body>
 
 </html>
