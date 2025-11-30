@@ -364,18 +364,18 @@
             block.className = 'track';
             block.id = 'track_' + index;
             block.innerHTML = `
-        <div class=\"meta\"><div><strong>${(window.escapeHtml ? window.escapeHtml(t.name) : t.name)}</strong></div></div>
-        <div id=\"player_${index}\" class=\"yt-frame\"></div>
-        <div class=\"group-chips\" id=\"chips_${index}\"></div>
-        <div class=\"controls\">
-          <div class=\"row\">\n            <button data-i=\"${index}\" class=\"play\">Play</button>
-            <button data-i=\"${index}\" class=\"pause\">Pause</button>
-            <button data-i=\"${index}\" class=\"stop secondary\">Stop</button>
-            <button data-i=\"${index}\" class=\"rm secondary\">Eliminar</button>
+        <div class="meta"><div><strong>${(window.escapeHtml ? window.escapeHtml(t.name) : t.name)}</strong></div></div>
+        <div id="player_${index}" class="yt-frame" aria-hidden="true"></div>
+        <div class="group-chips" id="chips_${index}"></div>
+        <div class="controls">
+          <div class="row">\n            <button data-i="${index}" class="btn-toggle">Reproducir</button>
+            <button data-i="${index}" class="stop secondary">Stop</button>
+            <button data-i="${index}" class="btn-video-toggle" aria-expanded="false" aria-controls="player_${index}">Mostrar video</button>
+            <button data-i="${index}" class="rm secondary">Eliminar</button>
           </div>
-          <div class=\"row\">
-            <label>Vol <input type=\"range\" min=\"0\" max=\"100\" value=\"${t.volume}\" data-i=\"${index}\" class=\"vol\"></label>
-            <label><input type=\"checkbox\" data-i=\"${index}\" class=\"loop\" ${t.loop ? 'checked' : ''} /> Bucle</label>
+          <div class="row">
+            <label>Vol <input type="range" min="0" max="100" value="${t.volume}" data-i="${index}" class="vol"></label>
+            <label><input type="checkbox" data-i="${index}" class="loop" ${t.loop ? 'checked' : ''} /> Bucle</label>
           </div>
         </div>
       `;
@@ -383,37 +383,44 @@
             renderChipsForTrack(index);
         });
 
-        tracksList.querySelectorAll('.play').forEach(b => b.onclick = async e => {
+        // Toggle play/pause single button
+        tracksList.querySelectorAll('.btn-toggle').forEach(b => b.onclick = async e => {
             const i = Number(e.target.dataset.i);
             const p = players[i]?.player;
             if (!p) return;
             try {
-                p.setVolume(0);
-                p.playVideo();
-                await fadeYTVolume(p, 0, tracks[i].volume, FADE_MS);
+                const state = (typeof p.getPlayerState === 'function') ? p.getPlayerState() : null;
+                // YT state 1 == playing
+                if (state === 1) {
+                    await fadeYTVolume(p, getCurrentYTVolumeSafe(p), 0, FADE_MS);
+                    try { p.pauseVideo(); } catch {}
+                    e.target.textContent = 'Reproducir';
+                } else {
+                    try { p.setVolume(0); } catch {}
+                    p.playVideo && p.playVideo();
+                    try { await fadeYTVolume(p, 0, tracks[i].volume, FADE_MS); } catch {}
+                    e.target.textContent = 'Pausar';
+                }
             } catch {
             }
         });
-        tracksList.querySelectorAll('.pause').forEach(b => b.onclick = async e => {
-            const i = Number(e.target.dataset.i);
-            const p = players[i]?.player;
-            if (!p) return;
-            try {
-                await fadeYTVolume(p, getCurrentYTVolumeSafe(p), 0, FADE_MS);
-                p.pauseVideo();
-            } catch {
-            }
-        });
+
+        // Stop button (unchanged behavior)
         tracksList.querySelectorAll('.stop').forEach(b => b.onclick = async e => {
             const i = Number(e.target.dataset.i);
             const p = players[i]?.player;
             if (!p) return;
             try {
                 await fadeYTVolume(p, getCurrentYTVolumeSafe(p), 0, FADE_MS);
-                p.stopVideo();
+                p.stopVideo && p.stopVideo();
+                // ensure toggle button shows 'Reproducir'
+                const toggle = tracksList.querySelector('.btn-toggle[data-i="' + i + '"]');
+                if (toggle) toggle.textContent = 'Reproducir';
             } catch {
             }
         });
+
+        // Remove track
         tracksList.querySelectorAll('.rm').forEach(b => b.onclick = e => {
             const i = Number(e.target.dataset.i);
             if (confirm('Eliminar pista?')) {
@@ -428,6 +435,7 @@
             }
         });
 
+        // Volume sliders
         tracksList.querySelectorAll('.vol').forEach(r => r.addEventListener('input', e => {
             const i = Number(e.target.dataset.i);
             const v = Number(e.target.value);
@@ -439,10 +447,26 @@
             }
             saveTracks();
         }));
+
+        // Loop checkboxes
         tracksList.querySelectorAll('.loop').forEach(chk => chk.addEventListener('change', e => {
             const i = Number(e.target.dataset.i);
             tracks[i].loop = e.target.checked;
             saveTracks();
+        }));
+
+        // Video toggle: show/hide iframe (yt-frame)
+        tracksList.querySelectorAll('.btn-video-toggle').forEach(b => b.addEventListener('click', e => {
+            const i = Number(e.target.dataset.i);
+            const wrap = document.getElementById('player_' + i);
+            if (!wrap) return;
+            const isNow = wrap.classList.toggle('show');
+            b.setAttribute('aria-expanded', isNow ? 'true' : 'false');
+            b.textContent = isNow ? 'Ocultar video' : 'Mostrar video';
+            // when hiding, try to pause playback of the video
+            if (!isNow) {
+                try { const p = players[i]?.player; if (p) p.pauseVideo && p.pauseVideo(); } catch {}
+            }
         }));
     }
 
