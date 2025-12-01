@@ -105,13 +105,13 @@
         URL.revokeObjectURL(url);
     }
 
-    function exportData(options = {includeInitiative: false}) {
-        const payload = {tracks: tracks, groups: groups};
+    function exportData(options = { includeInitiative: false }) {
+        const payload = { tracks: tracks, groups: groups };
         try {
             if (options.includeInitiative && window.dmInitiative && window.dmInitiative.getState) payload.initiative = window.dmInitiative.getState();
         } catch {
         }
-        const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
         downloadBlob(blob, 'dm_export_' + Date.now() + '.json');
     }
 
@@ -207,7 +207,7 @@
                     return;
                 }
                 const choice = confirm('Presiona Aceptar para exportar (incluir iniciativa si existe). Cancelar para importar.');
-                if (choice) exportData({includeInitiative: true});
+                if (choice) exportData({ includeInitiative: true });
                 else if (modalInput) modalInput.click();
             });
         }
@@ -221,7 +221,7 @@
                 const include = !!(modalIncludeChk && modalIncludeChk.checked);
                 try {
                     setStatus(modalStatus, 'Preparando exportación...');
-                    exportData({includeInitiative: include});
+                    exportData({ includeInitiative: include });
                     setStatus(modalStatus, 'Exportación completada (descarga iniciada)');
                     setTimeout(() => setStatus(modalStatus, ''), 2500);
                 } catch (e) {
@@ -251,7 +251,7 @@
                 const include = !!(includeChk && includeChk.checked);
                 try {
                     setStatus(statusEl, 'Preparando exportación...');
-                    exportData({includeInitiative: include});
+                    exportData({ includeInitiative: include });
                     setStatus(statusEl, 'Exportación completada (descarga iniciada)');
                     setTimeout(() => setStatus(statusEl, ''), 2500);
                 } catch (e) {
@@ -275,7 +275,7 @@
             }
         });
 
-        window.dmMusic = Object.assign(window.dmMusic || {}, {openImportModal, closeImportModal: closeImportModalFn});
+        window.dmMusic = Object.assign(window.dmMusic || {}, { openImportModal, closeImportModal: closeImportModalFn });
 
     });
 
@@ -359,27 +359,59 @@
         if (!tracksList) return;
         tracksList.innerHTML = '';
         players = [];
+
         tracks.forEach((t, index) => {
             const block = document.createElement('div');
             block.className = 'track';
             block.id = 'track_' + index;
-            block.innerHTML = `
-        <div class="meta"><div><strong>${(window.escapeHtml ? window.escapeHtml(t.name) : t.name)}</strong></div></div>
-        <div id="player_${index}" class="yt-frame" aria-hidden="true"></div>
-        <div class="group-chips" id="chips_${index}"></div>
-        <div class="controls">
-          <div class="row">\n            <button data-i="${index}" class="btn-toggle">Reproducir</button>
-            <button data-i="${index}" class="stop secondary">Stop</button>
-            <button data-i="${index}" class="btn-video-toggle" aria-expanded="false" aria-controls="player_${index}">Mostrar video</button>
-            <button data-i="${index}" class="rm secondary">Eliminar</button>
-          </div>
-          <div class="row">
-            <label>Vol <input type="range" min="0" max="100" value="${t.volume}" data-i="${index}" class="vol"></label>
-            <label><input type="checkbox" data-i="${index}" class="loop" ${t.loop ? 'checked' : ''} /> Bucle</label>
-          </div>
-        </div>
-      `;
+
+            // Iframe fuera de grupo-test
+            const iframe = document.createElement('div');
+            iframe.className = 'yt-frame';
+            iframe.id = 'player_' + index;
+            iframe.setAttribute('aria-hidden', 'true');
+            block.appendChild(iframe);
+
+            // Creamos el div grupo-test que contendrá meta, controls y group-chips
+            const grupoTest = document.createElement('div');
+            grupoTest.className = 'grupo-test';
+
+            // Meta
+            const meta = document.createElement('div');
+            meta.className = 'meta';
+            meta.innerHTML = `<div><strong>${(window.escapeHtml ? window.escapeHtml(t.name) : t.name)}</strong></div>`;
+            grupoTest.appendChild(meta);
+
+            // Controls
+            const controls = document.createElement('div');
+            controls.className = 'controls';
+            controls.innerHTML = `
+            <div class="row">
+                <button data-i="${index}" class="btn-toggle">Reproducir</button>
+                <button data-i="${index}" class="stop secondary">Stop</button>
+                <button data-i="${index}" class="btn-video-toggle" aria-expanded="false" aria-controls="player_${index}">Mostrar video</button>
+                <button data-i="${index}" class="rm secondary">Eliminar</button>
+            </div>
+            <div class="row">
+                <label>Vol <input type="range" min="0" max="100" value="${t.volume}" data-i="${index}" class="vol"></label>
+                <label><input type="checkbox" data-i="${index}" class="loop" ${t.loop ? 'checked' : ''} /> Bucle</label>
+            </div>
+        `;
+            grupoTest.appendChild(controls);
+
+            // Div group-chips dentro de grupo-test
+            const chipsContainer = document.createElement('div');
+            chipsContainer.className = 'group-chips';
+            chipsContainer.id = 'chips_' + index;
+            grupoTest.appendChild(chipsContainer);
+
+            // Añadimos grupo-test al bloque principal
+            block.appendChild(grupoTest);
+
+            // Añadimos el bloque al DOM
             tracksList.appendChild(block);
+
+            // Renderizamos los chips dentro del div group-chips
             renderChipsForTrack(index);
         });
 
@@ -393,12 +425,12 @@
                 // YT state 1 == playing
                 if (state === 1) {
                     await fadeYTVolume(p, getCurrentYTVolumeSafe(p), 0, FADE_MS);
-                    try { p.pauseVideo(); } catch {}
+                    try { p.pauseVideo(); } catch { }
                     e.target.textContent = 'Reproducir';
                 } else {
-                    try { p.setVolume(0); } catch {}
+                    try { p.setVolume(0); } catch { }
                     p.playVideo && p.playVideo();
-                    try { await fadeYTVolume(p, 0, tracks[i].volume, FADE_MS); } catch {}
+                    try { await fadeYTVolume(p, 0, tracks[i].volume, FADE_MS); } catch { }
                     e.target.textContent = 'Pausar';
                 }
             } catch {
@@ -465,7 +497,7 @@
             b.textContent = isNow ? 'Ocultar video' : 'Mostrar video';
             // when hiding, try to pause playback of the video
             if (!isNow) {
-                try { const p = players[i]?.player; if (p) p.pauseVideo && p.pauseVideo(); } catch {}
+                try { const p = players[i]?.player; if (p) p.pauseVideo && p.pauseVideo(); } catch { }
             }
         }));
     }
@@ -489,7 +521,7 @@
                 if (!YTready) return;
                 p.player = new YT.Player(containerId, {
                     height: '0', width: '0', videoId: p.videoId,
-                    playerVars: {controls: 0, modestbranding: 1, rel: 0, disablekb: 1, origin: playerOrigin},
+                    playerVars: { controls: 0, modestbranding: 1, rel: 0, disablekb: 1, origin: playerOrigin },
                     events: {
                         onReady: ev => {
                             try {
@@ -568,7 +600,7 @@
         const name = (groupNameInput.value || '').trim();
         if (!name) return alert('Pon un nombre al grupo.');
         const id = 'g' + Date.now();
-        groups.push({id, name, volume: 100});
+        groups.push({ id, name, volume: 100 });
         groupNameInput.value = '';
         renderGroups();
         saveGroups();
@@ -585,7 +617,7 @@
         const id = extractYouTubeID(url);
         if (!id) return alert('No se pudo extraer ID de YouTube.');
         const name = (ytNameInput.value || '').trim() || ('Pista ' + (tracks.length + 1));
-        tracks.push({videoId: id, name, volume: 80, loop: false, groups: []});
+        tracks.push({ videoId: id, name, volume: 80, loop: false, groups: [] });
         ytUrlInput.value = '';
         ytNameInput.value = '';
         renderTracksList();
